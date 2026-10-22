@@ -4,19 +4,25 @@
     "slug": "focus-21-executive",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0D0E11",
     "splash": {
-      "backgroundColor": "#0D0E11",
-      "resizeMode": "contain"
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D0E11"
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0D0E11"
       },
       "package": "com.focus21.executive",
       "permissions": ["VIBRATE"],
       "softwareKeyboardLayoutMode": "pan"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "plugins": []
   }

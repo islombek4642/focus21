@@ -31,4 +31,16 @@ describe('Project Scaffold Verification', () => {
     const appPath = path.join(rootDir, 'App.tsx');
     assert.strictEqual(fs.existsSync(appPath), true, 'App.tsx must exist');
   });
+
+  it('must contain valid icon, adaptive-icon, and splash configuration and asset files', () => {
+    const appJsonPath = path.join(rootDir, 'app.json');
+    const appConfig = JSON.parse(fs.readFileSync(appJsonPath, 'utf-8'));
+    assert.ok(appConfig.expo.icon, 'expo.icon must be configured');
+    assert.ok(appConfig.expo.splash?.image, 'expo.splash.image must be configured');
+    assert.ok(appConfig.expo.android?.adaptiveIcon?.foregroundImage, 'android.adaptiveIcon.foregroundImage must be configured');
+
+    assert.ok(fs.existsSync(path.join(rootDir, appConfig.expo.icon)), 'icon file must exist');
+    assert.ok(fs.existsSync(path.join(rootDir, appConfig.expo.splash.image)), 'splash image file must exist');
+    assert.ok(fs.existsSync(path.join(rootDir, appConfig.expo.android.adaptiveIcon.foregroundImage)), 'adaptive icon file must exist');
+  });
 });
