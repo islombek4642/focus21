@@ -1,26 +1,91 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { t } from '../../services/i18n.ts';
+import { HourlyRateCalculator } from './HourlyRateCalculator.tsx';
+import { TRAFInbox } from './TRAFInbox.tsx';
+import { TimeLogList } from './TimeLogList.tsx';
+import { useAuditStore, TRAFCategory, TimeLogCategory } from '../../store/auditStore.ts';
 
 export const AuditScreen: React.FC = () => {
+  const [auditState, setAuditState] = useState(() => useAuditStore.getState());
+
+  useEffect(() => {
+    const unsubscribe = useAuditStore.subscribe(() => {
+      setAuditState({ ...useAuditStore.getState() });
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleAddTraf = (title: string, category: TRAFCategory) => {
+    useAuditStore.getState().addTrafItem(title, category);
+  };
+
+  const handleDeleteTraf = (id: string) => {
+    useAuditStore.getState().deleteTrafItem(id);
+  };
+
+  const handleAddTimeLog = (activity: string, durationMinutes: number, category: TimeLogCategory) => {
+    useAuditStore.getState().addTimeLog(activity, durationMinutes, category);
+  };
+
+  const handleDeleteTimeLog = (id: string) => {
+    useAuditStore.getState().deleteTimeLog(id);
+  };
+
   return (
     <ScreenContainer>
-      <View style={styles.header}>
-        <Text style={styles.title}>{t('tabs.audit')}</Text>
+      {/* Top Header */}
+      <View style={styles.topHeader}>
+        <View>
+          <Text style={styles.brandTitle}>{t('tabs.audit', { defaultValue: 'TIME AUDIT & TRIAGE' })}</Text>
+          <Text style={styles.subtitle}>
+            {t('audit.principleNote', { defaultValue: 'Principles #6, #11, #12 & #15' })}
+          </Text>
+        </View>
       </View>
+
+      {/* Hourly Rate & Delegation Calculator */}
+      <HourlyRateCalculator />
+
+      {/* TRAF Triage System */}
+      <TRAFInbox
+        items={auditState.trafItems}
+        onAddItem={handleAddTraf}
+        onDeleteItem={handleDeleteTraf}
+      />
+
+      {/* Minute-by-Minute Time Log */}
+      <TimeLogList
+        logs={auditState.timeLogs}
+        onAddLog={handleAddTimeLog}
+        onDeleteLog={handleDeleteTimeLog}
+      />
     </ScreenContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    paddingVertical: THEME.spacing.md,
+  topHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: THEME.spacing.sm,
+    paddingBottom: THEME.spacing.sm,
   },
-  title: {
-    fontSize: THEME.typography.headingLg.fontSize,
-    fontWeight: THEME.typography.headingLg.fontWeight,
-    color: THEME.typography.headingLg.color,
+  brandTitle: {
+    ...THEME.typography.headingLg,
+    fontSize: 22,
+    letterSpacing: 1.5,
+  },
+  subtitle: {
+    fontSize: 11,
+    color: THEME.colors.textSecondary,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
 });

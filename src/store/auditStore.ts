@@ -12,11 +12,20 @@ export interface TRAFItem {
   createdAt: number;
 }
 
+export type TimeLogCategory =
+  | 'focus'
+  | 'meeting'
+  | 'admin'
+  | 'rest'
+  | 'high-payoff'
+  | 'administrative'
+  | 'interruption';
+
 export interface TimeLogEntry {
   id: string;
   activity: string;
   durationMinutes: number;
-  category: 'high-payoff' | 'administrative' | 'interruption' | 'meeting';
+  category: TimeLogCategory;
   timestamp: number;
 }
 
@@ -27,8 +36,15 @@ export interface AuditState {
   hourlyRate: number; // calculated as annual / 2000 hours
   addTrafItem: (title: string, category: TRAFCategory) => void;
   deleteTrafItem: (id: string) => void;
-  addTimeLog: (activity: string, durationMinutes: number, category: TimeLogEntry['category']) => void;
+  addTimeLog: (
+    activityOrEntry: string | TimeLogEntry,
+    durationMinutes?: number,
+    category?: TimeLogCategory
+  ) => void;
+  deleteTimeLog: (id: string) => void;
   setAnnualTargetIncome: (amount: number) => void;
+  setTargetAnnualIncome: (amount: number) => void;
+  getHourlyRate: () => number;
   reset: () => void;
   setTrafItems: (items: TRAFItem[]) => void;
 }
@@ -43,8 +59,8 @@ class AuditStore {
     this.state = {
       trafItems: [],
       timeLogs: [],
-      annualTargetIncome: 50000,
-      hourlyRate: 25,
+      annualTargetIncome: 100000,
+      hourlyRate: 50,
       addTrafItem: (title, category) => {
         const item: TRAFItem = {
           id: `traf-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
@@ -59,27 +75,43 @@ class AuditStore {
         this.state.trafItems = this.state.trafItems.filter((i) => i.id !== id);
         this.notify();
       },
-      addTimeLog: (activity, durationMinutes, category) => {
-        const log: TimeLogEntry = {
-          id: `log-${Date.now()}`,
-          activity,
-          durationMinutes,
-          category,
-          timestamp: Date.now(),
-        };
-        this.state.timeLogs = [log, ...this.state.timeLogs];
+      addTimeLog: (activityOrEntry, durationMinutes = 30, category = 'focus') => {
+        if (typeof activityOrEntry === 'object') {
+          this.state.timeLogs = [activityOrEntry, ...this.state.timeLogs];
+        } else {
+          const log: TimeLogEntry = {
+            id: `log-${Date.now()}`,
+            activity: activityOrEntry,
+            durationMinutes,
+            category,
+            timestamp: Date.now(),
+          };
+          this.state.timeLogs = [log, ...this.state.timeLogs];
+        }
+        this.notify();
+      },
+      deleteTimeLog: (id) => {
+        this.state.timeLogs = this.state.timeLogs.filter((l) => l.id !== id);
         this.notify();
       },
       setAnnualTargetIncome: (amount) => {
         this.state.annualTargetIncome = amount;
-        this.state.hourlyRate = Math.round(amount / 2000); // 50 weeks * 40 hours = 2000h
+        this.state.hourlyRate = Math.round(amount / 2000);
         this.notify();
+      },
+      setTargetAnnualIncome: (amount) => {
+        this.state.annualTargetIncome = amount;
+        this.state.hourlyRate = Math.round(amount / 2000);
+        this.notify();
+      },
+      getHourlyRate: () => {
+        return this.state.hourlyRate;
       },
       reset: () => {
         this.state.trafItems = [];
         this.state.timeLogs = [];
-        this.state.annualTargetIncome = 50000;
-        this.state.hourlyRate = 25;
+        this.state.annualTargetIncome = 100000;
+        this.state.hourlyRate = 50;
         this.notify();
       },
       setTrafItems: (items) => {
