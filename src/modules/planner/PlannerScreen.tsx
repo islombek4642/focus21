@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
+import { ExecutiveHeader } from '../../components/common/ExecutiveHeader.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
@@ -81,24 +82,22 @@ export const PlannerScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {/* Top Header */}
-      <View style={styles.topHeader}>
-        <View>
-          <Text style={styles.brandTitle}>{t('tabs.planner', { defaultValue: 'ABCDE PLANNER' })}</Text>
-          <Text style={styles.subtitle}>
-            {t('planner.principleNote', { defaultValue: 'Principles #1, #3 & #5' })}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.ritualBtn}
-          onPress={() => setRitualModalVisible(true)}
-          activeOpacity={0.8}
-        >
-          <VectorIcon name="moon" size={13} color={THEME.colors.accent} />
-          <Text style={styles.ritualBtnText}>
-            {t('planner.eveningRitualBtn', { defaultValue: 'Evening Ritual' })}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ExecutiveHeader
+        title={t('tabs.planner', { defaultValue: 'ABCDE PLANNER' })}
+        subtitle={t('planner.principleNote', { defaultValue: 'Principles #1, #3 & #5' })}
+        badge={
+          <TouchableOpacity
+            style={styles.ritualBtn}
+            onPress={() => setRitualModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <VectorIcon name="moon" size={13} color={THEME.colors.accent} />
+            <Text style={styles.ritualBtnText}>
+              {t('planner.eveningRitualBtn', { defaultValue: 'Evening Ritual' })}
+            </Text>
+          </TouchableOpacity>
+        }
+      />
 
       {/* 80/20 Pareto Summary */}
       <ParetoSummary

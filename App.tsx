@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { THEME } from './src/constants/theme.ts';
 import { RootNavigator } from './src/navigation/RootNavigator.tsx';
 import { SettingsModal } from './src/components/SettingsModal.tsx';
-import { VectorIcon } from './src/components/common/VectorIcon.tsx';
 import { useTranslation } from './src/services/i18n.ts';
+import { useSettingsStore } from './src/store/settingsStore.ts';
 
 const navTheme = {
   ...DarkTheme,
@@ -22,34 +22,32 @@ const navTheme = {
 };
 
 export default function App() {
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(() => useSettingsStore.getState().isSettingsOpen);
   const { language } = useTranslation();
+
+  useEffect(() => {
+    const unsub = useSettingsStore.subscribe(() => {
+      setSettingsOpen(useSettingsStore.getState().isSettingsOpen);
+    });
+    return () => {
+      unsub();
+    };
+  }, []);
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.root}>
+      <View style={styles.root}>
         <StatusBar style="light" />
 
-      {/* Floating Settings Gear Trigger */}
-      <View style={styles.topBar}>
-        <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={() => setSettingsOpen(true)}
-          activeOpacity={0.7}
-        >
-          <VectorIcon name="settings" size={18} color={THEME.colors.textSecondary} />
-        </TouchableOpacity>
+        <NavigationContainer theme={navTheme}>
+          <RootNavigator key={language} />
+        </NavigationContainer>
+
+        <SettingsModal
+          visible={settingsOpen}
+          onClose={() => useSettingsStore.getState().setSettingsOpen(false)}
+        />
       </View>
-
-      <NavigationContainer theme={navTheme}>
-        <RootNavigator key={language} />
-      </NavigationContainer>
-
-      <SettingsModal
-        visible={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-      />
-      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
@@ -58,21 +56,5 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: THEME.colors.canvas,
-  },
-  topBar: {
-    position: 'absolute',
-    top: 40,
-    right: 16,
-    zIndex: 99,
-  },
-  settingsButton: {
-    width: 36,
-    height: 36,
-    borderRadius: THEME.radii.full,
-    backgroundColor: 'rgba(22, 24, 29, 0.85)',
-    borderWidth: 1,
-    borderColor: THEME.colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

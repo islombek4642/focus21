@@ -16,7 +16,7 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
 }) => {
   if (scrollable) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
         <ScrollView
           style={styles.scrollView}
           contentContainerStyle={[styles.contentContainer, style]}
@@ -31,7 +31,7 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <View style={[styles.container, style]}>{children}</View>
     </SafeAreaView>
   );
@@ -48,12 +48,13 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: THEME.spacing.md,
-    paddingTop: THEME.spacing.md,
+    paddingTop: THEME.spacing.xs,
     paddingBottom: THEME.spacing.xl,
   },
   container: {
     flex: 1,
     backgroundColor: THEME.colors.canvas,
     paddingHorizontal: THEME.spacing.md,
+    paddingTop: THEME.spacing.xs,
   },
 });

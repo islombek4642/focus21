@@ -10,6 +10,8 @@ export interface SettingsState {
   setLanguage: (lang: SupportedLanguage) => void;
   hapticsEnabled: boolean;
   setHapticsEnabled: (enabled: boolean) => void;
+  isSettingsOpen: boolean;
+  setSettingsOpen: (open: boolean) => void;
 }
 
 type Listener = () => void;
@@ -29,6 +31,11 @@ class SettingsStore {
       hapticsEnabled: true,
       setHapticsEnabled: (enabled) => {
         this.state.hapticsEnabled = enabled;
+        this.notify();
+      },
+      isSettingsOpen: false,
+      setSettingsOpen: (open) => {
+        this.state.isSettingsOpen = open;
         this.notify();
       },
     };

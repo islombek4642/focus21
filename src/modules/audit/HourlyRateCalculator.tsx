@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
   },
   titles: {
     marginLeft: 8,
+    flex: 1,
   },
   title: {
     fontSize: 15,

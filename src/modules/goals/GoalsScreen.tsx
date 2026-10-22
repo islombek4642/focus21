@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
+import { ExecutiveHeader } from '../../components/common/ExecutiveHeader.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
@@ -56,26 +57,24 @@ export const GoalsScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {/* Top Header */}
-      <View style={styles.topHeader}>
-        <View>
-          <Text style={styles.brandTitle}>{t('tabs.goals', { defaultValue: 'GOALS & PURPOSE' })}</Text>
-          <Text style={styles.subtitle}>
-            {t('goals.principleNote', { defaultValue: 'Principles #2, #4 & #14' })}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.clarifierBtn}
-          onPress={() => setModalVisible(true)}
-          activeOpacity={0.8}
-        >
-          <VectorIcon name="help-circle" size={13} color={THEME.colors.accent} />
-          <Text style={styles.clarifierBtnText}>
-            {hasGoldenAnswers
-              ? t('goals.viewClarifiers', { defaultValue: '3 Questions' })
-              : t('goals.openClarifiers', { defaultValue: 'Clarify' })}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ExecutiveHeader
+        title={t('tabs.goals', { defaultValue: 'GOALS & PURPOSE' })}
+        subtitle={t('goals.principleNote', { defaultValue: 'Principles #2, #4 & #14' })}
+        badge={
+          <TouchableOpacity
+            style={styles.clarifierBtn}
+            onPress={() => setModalVisible(true)}
+            activeOpacity={0.8}
+          >
+            <VectorIcon name="help-circle" size={13} color={THEME.colors.accent} />
+            <Text style={styles.clarifierBtnText}>
+              {hasGoldenAnswers
+                ? t('goals.viewClarifiers', { defaultValue: '3 Questions' })
+                : t('goals.openClarifiers', { defaultValue: 'Clarify' })}
+            </Text>
+          </TouchableOpacity>
+        }
+      />
 
       {/* Golden Questions Callout */}
       <TouchableOpacity

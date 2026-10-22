@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
+import { ExecutiveHeader } from '../../components/common/ExecutiveHeader.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { WheelOfLifeRadar } from './WheelOfLifeRadar.tsx';
@@ -38,14 +39,10 @@ export const BalanceScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {/* Top Header */}
-      <View style={styles.topHeader}>
-        <View>
-          <Text style={styles.brandTitle}>{t('tabs.balance', { defaultValue: 'EXECUTIVE BALANCE' })}</Text>
-          <Text style={styles.subtitle}>
-            {t('balance.principleNote', { defaultValue: 'Principles #10, #19 & #20' })}
-          </Text>
-        </View>
-      </View>
+      <ExecutiveHeader
+        title={t('tabs.balance', { defaultValue: 'EXECUTIVE BALANCE' })}
+        subtitle={t('balance.principleNote', { defaultValue: 'Principles #10, #19 & #20' })}
+      />
 
       {/* Wheel of Life Radar */}
       <WheelOfLifeRadar

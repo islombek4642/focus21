@@ -90,8 +90,8 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
         />
       </View>
 
-      {/* 4 Dispatch Buttons */}
-      <View style={styles.buttonsRow}>
+      {/* 4 Dispatch Buttons (2x2 Responsive Grid) */}
+      <View style={styles.buttonsGrid}>
         {(['toss', 'refer', 'action', 'file'] as TRAFCategory[]).map((cat) => {
           const d = getCategoryDetails(cat);
           return (
@@ -101,8 +101,11 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
               onPress={() => handleDispatch(cat)}
               activeOpacity={0.7}
             >
-              <VectorIcon name={d.icon} size={13} color={d.color} />
-              <Text style={[styles.triageBtnText, { color: d.color }]}>{d.label}</Text>
+              <VectorIcon name={d.icon} size={15} color={d.color} />
+              <View style={styles.triageBtnInfo}>
+                <Text style={[styles.triageBtnText, { color: d.color }]}>{d.label}</Text>
+                <Text style={styles.triageBtnDesc} numberOfLines={1}>{d.desc}</Text>
+              </View>
             </TouchableOpacity>
           );
         })}
@@ -183,26 +186,35 @@ const styles = StyleSheet.create({
     color: THEME.colors.textPrimary,
     fontSize: 13,
   },
-  buttonsRow: {
+  buttonsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 6,
+    gap: 8,
     marginBottom: THEME.spacing.sm,
   },
   triageBtn: {
-    flex: 1,
+    width: '48.5%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 7,
-    borderRadius: THEME.radii.sm,
+    paddingVertical: 9,
+    paddingHorizontal: 10,
+    borderRadius: THEME.radii.md,
     borderWidth: 1,
+    gap: 8,
+  },
+  triageBtnInfo: {
+    flex: 1,
   },
   triageBtnText: {
-    fontSize: 10,
+    fontSize: 11,
     fontWeight: '800',
-    marginLeft: 4,
     letterSpacing: 0.5,
+  },
+  triageBtnDesc: {
+    fontSize: 9,
+    color: THEME.colors.textSecondary,
+    marginTop: 1,
   },
   itemsList: {
     marginTop: 4,

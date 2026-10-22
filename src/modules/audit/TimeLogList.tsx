@@ -64,10 +64,10 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
           onChangeText={setActivity}
         />
 
-        {/* Options */}
-        <View style={styles.optionsRow}>
-          {/* Duration Chips */}
-          <View style={styles.chipGroup}>
+        {/* Row 1: Duration Selector */}
+        <View style={styles.selectorRow}>
+          <Text style={styles.selectorLabel}>Vaqt:</Text>
+          <View style={styles.durationChips}>
             {durationOptions.map((d) => (
               <TouchableOpacity
                 key={d}
@@ -76,22 +76,29 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
                 activeOpacity={0.7}
               >
                 <Text style={[styles.chipText, duration === d && styles.chipTextActive]}>
-                  {d}m
+                  {d} daq
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
+        </View>
 
-          {/* Category Chips */}
-          <View style={styles.chipGroup}>
+        {/* Row 2: Category Selector + Add Button */}
+        <View style={styles.categoryRow}>
+          <View style={styles.categoryChips}>
             {categoryOptions.map((c) => (
               <TouchableOpacity
                 key={c.key}
-                style={[styles.chip, category === c.key && styles.chipActive]}
+                style={[styles.catChip, category === c.key && styles.catChipActive]}
                 onPress={() => setCategory(c.key)}
                 activeOpacity={0.7}
               >
-                <Text style={[styles.chipText, category === c.key && styles.chipTextActive]}>
+                <VectorIcon
+                  name={c.icon}
+                  size={11}
+                  color={category === c.key ? THEME.colors.accent : THEME.colors.textSecondary}
+                />
+                <Text style={[styles.catChipText, category === c.key && styles.catChipTextActive]}>
                   {c.label}
                 </Text>
               </TouchableOpacity>
@@ -99,7 +106,7 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
           </View>
 
           <TouchableOpacity style={styles.addBtn} onPress={handleAdd} activeOpacity={0.8}>
-            <VectorIcon name="plus" size={16} color={THEME.colors.canvas} />
+            <VectorIcon name="plus" size={16} color="#000000" />
           </TouchableOpacity>
         </View>
       </View>
@@ -203,43 +210,84 @@ const styles = StyleSheet.create({
     fontSize: 13,
     height: 36,
   },
-  optionsRow: {
+  selectorRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 6,
-    flexWrap: 'wrap',
-    gap: 4,
+    marginTop: 8,
+    gap: 8,
   },
-  chipGroup: {
+  selectorLabel: {
+    fontSize: 11,
+    color: THEME.colors.textSecondary,
+    fontWeight: '700',
+    width: 38,
+  },
+  durationChips: {
     flexDirection: 'row',
-    gap: 4,
+    flex: 1,
+    gap: 6,
   },
   chip: {
     backgroundColor: '#1B1E26',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: THEME.radii.sm,
     borderWidth: 1,
     borderColor: THEME.colors.border,
   },
   chipActive: {
-    backgroundColor: '#261F10',
+    backgroundColor: 'rgba(229, 169, 60, 0.15)',
     borderColor: THEME.colors.accent,
   },
   chipText: {
-    fontSize: 10,
+    fontSize: 11,
     color: THEME.colors.textSecondary,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   chipTextActive: {
     color: THEME.colors.accent,
   },
+  categoryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+    gap: 8,
+  },
+  categoryChips: {
+    flexDirection: 'row',
+    flex: 1,
+    gap: 6,
+    flexWrap: 'wrap',
+  },
+  catChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1B1E26',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: THEME.radii.sm,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    gap: 4,
+  },
+  catChipActive: {
+    backgroundColor: 'rgba(229, 169, 60, 0.15)',
+    borderColor: THEME.colors.accent,
+  },
+  catChipText: {
+    fontSize: 11,
+    color: THEME.colors.textSecondary,
+    fontWeight: '700',
+  },
+  catChipTextActive: {
+    color: THEME.colors.accent,
+  },
   addBtn: {
     backgroundColor: THEME.colors.accent,
-    width: 26,
-    height: 26,
-    borderRadius: THEME.radii.full,
+    width: 34,
+    height: 34,
+    borderRadius: THEME.radii.md,
     alignItems: 'center',
     justifyContent: 'center',
   },

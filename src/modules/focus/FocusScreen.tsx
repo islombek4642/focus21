@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
+import { ExecutiveHeader } from '../../components/common/ExecutiveHeader.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
@@ -67,18 +68,18 @@ export const FocusScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {/* Top Header */}
-      <View style={styles.topHeader}>
-        <View>
-          <Text style={styles.brandTitle}>FOCUS 21</Text>
-          <Text style={styles.subtitle}>{t('focus.subtitle', { defaultValue: 'Executive OS' })}</Text>
-        </View>
-        <View style={styles.mantraBadge}>
-          <VectorIcon name="activity" size={12} color={THEME.colors.accent} />
-          <Text style={styles.mantraText}>
-            {t('focus.doItNow', { defaultValue: 'DO IT NOW!' })}
-          </Text>
-        </View>
-      </View>
+      <ExecutiveHeader
+        title="FOCUS 21"
+        subtitle={t('focus.subtitle', { defaultValue: 'Executive OS' })}
+        badge={
+          <View style={styles.mantraBadge}>
+            <VectorIcon name="activity" size={12} color={THEME.colors.accent} />
+            <Text style={styles.mantraText}>
+              {t('focus.doItNow', { defaultValue: 'DO IT NOW!' })}
+            </Text>
+          </View>
+        }
+      />
 
       {/* 90-Minute Timer Ring */}
       <TimerRing

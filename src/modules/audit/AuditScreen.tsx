@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
+import { ExecutiveHeader } from '../../components/common/ExecutiveHeader.tsx';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { HourlyRateCalculator } from './HourlyRateCalculator.tsx';
@@ -40,14 +41,10 @@ export const AuditScreen: React.FC = () => {
   return (
     <ScreenContainer>
       {/* Top Header */}
-      <View style={styles.topHeader}>
-        <View>
-          <Text style={styles.brandTitle}>{t('tabs.audit', { defaultValue: 'TIME AUDIT & TRIAGE' })}</Text>
-          <Text style={styles.subtitle}>
-            {t('audit.principleNote', { defaultValue: 'Principles #6, #11, #12 & #15' })}
-          </Text>
-        </View>
-      </View>
+      <ExecutiveHeader
+        title={t('tabs.audit', { defaultValue: 'TIME AUDIT & TRIAGE' })}
+        subtitle={t('audit.principleNote', { defaultValue: 'Principles #6, #11, #12 & #15' })}
+      />
 
       {/* Hourly Rate & Delegation Calculator */}
       <HourlyRateCalculator />
