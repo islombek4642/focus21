@@ -3,27 +3,36 @@
  * Manages Wheel of Life scores, daily family conversation time, and Saying No boundary journal
  */
 
-export interface WheelScores {
-  healthEnergy: number; // 1-10
-  peaceOfMind: number;  // 1-10
-  relationships: number; // 1-10
-  careerFinance: number; // 1-10
-  selfDevelopment: number; // 1-10
+export interface PillarScores {
+  family: number;
+  health: number;
+  career: number;
+  finance: number;
+  growth: number;
+  rest: number;
+  [key: string]: number;
 }
 
 export interface RefusalEntry {
   id: string;
   requestTitle: string;
+  request?: string;
   declinedAt: number;
+  timestamp?: number;
   reason: string;
 }
 
 export interface BalanceState {
-  wheelScores: WheelScores;
+  scores: PillarScores;
+  wheelScores: Record<string, number>;
   familyMinutesToday: number;
+  sayingNoEntries: Array<{ id: string; request: string; reason: string; timestamp: number }>;
   refusals: RefusalEntry[];
-  setWheelScore: (dimension: keyof WheelScores, score: number) => void;
+  setScore: (pillar: keyof PillarScores | string, score: number) => void;
+  setWheelScore: (dimension: string, score: number) => void;
+  getAverageScore: () => number;
   addFamilyMinutes: (minutes: number) => void;
+  addSayingNoEntry: (request: string, reason?: string) => void;
   addRefusal: (requestTitle: string, reason?: string) => void;
   reset: () => void;
 }
@@ -35,7 +44,17 @@ class BalanceStore {
   private listeners: Set<Listener> = new Set();
 
   constructor() {
+    const defaultScores: PillarScores = {
+      family: 8,
+      health: 8,
+      career: 8,
+      finance: 7,
+      growth: 8,
+      rest: 7,
+    };
+
     this.state = {
+      scores: { ...defaultScores },
       wheelScores: {
         healthEnergy: 8,
         peaceOfMind: 7,
@@ -44,29 +63,58 @@ class BalanceStore {
         selfDevelopment: 8,
       },
       familyMinutesToday: 0,
+      sayingNoEntries: [],
       refusals: [],
-      setWheelScore: (dim, score) => {
-        this.state.wheelScores = {
-          ...this.state.wheelScores,
-          [dim]: Math.min(10, Math.max(1, score)),
-        };
+      setScore: (pillar, score) => {
+        const val = Math.min(10, Math.max(1, score));
+        this.state.scores[pillar] = val;
+        this.state.wheelScores[pillar] = val;
         this.notify();
+      },
+      setWheelScore: (dim, score) => {
+        const val = Math.min(10, Math.max(1, score));
+        this.state.wheelScores[dim] = val;
+        this.state.scores[dim] = val;
+        this.notify();
+      },
+      getAverageScore: () => {
+        const vals = Object.values(this.state.scores).filter((v) => typeof v === 'number');
+        if (vals.length === 0) return 0;
+        const sum = vals.reduce((a, b) => a + b, 0);
+        return Math.round((sum / vals.length) * 10) / 10;
       },
       addFamilyMinutes: (minutes) => {
         this.state.familyMinutesToday += minutes;
         this.notify();
       },
-      addRefusal: (requestTitle, reason = 'Not aligned with core goals') => {
-        const item: RefusalEntry = {
+      addSayingNoEntry: (request, reason = 'Not aligned with core priorities') => {
+        const item = {
           id: `refusal-${Date.now()}`,
-          requestTitle,
+          request,
+          requestTitle: request,
           declinedAt: Date.now(),
+          timestamp: Date.now(),
           reason,
         };
+        this.state.sayingNoEntries = [item, ...this.state.sayingNoEntries];
+        this.state.refusals = [item, ...this.state.refusals];
+        this.notify();
+      },
+      addRefusal: (requestTitle, reason = 'Not aligned with core goals') => {
+        const item = {
+          id: `refusal-${Date.now()}`,
+          request: requestTitle,
+          requestTitle,
+          declinedAt: Date.now(),
+          timestamp: Date.now(),
+          reason,
+        };
+        this.state.sayingNoEntries = [item, ...this.state.sayingNoEntries];
         this.state.refusals = [item, ...this.state.refusals];
         this.notify();
       },
       reset: () => {
+        this.state.scores = { ...defaultScores };
         this.state.wheelScores = {
           healthEnergy: 8,
           peaceOfMind: 7,
@@ -75,6 +123,7 @@ class BalanceStore {
           selfDevelopment: 8,
         };
         this.state.familyMinutesToday = 0;
+        this.state.sayingNoEntries = [];
         this.state.refusals = [];
         this.notify();
       },
