@@ -1,0 +1,45 @@
+<h2>Ma'lumotlar Saqlanishi va Foydalanuvchi Modeli</h2>
+<p class="subtitle">Ilovadagi shaxsiy maqsadlar, ABCDE rejalari va vaqt auditi qayerda va qanday saqlanishi kerak?</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>100% Offline-First & Maxfiy (Tavsiya etiladi)</h3>
+      <p>Hech qanday ro'yxatdan o'tish yoki login talab qilinmaydi. Barcha ma'lumotlar faqat foydalanuvchining o'z telefonida (AsyncStorage / SQLite) saqlanadi:</p>
+      <ul style="margin: 8px 0 0 16px; font-size: 13px; color: #bbc7c6;">
+        <li>Internetga umuman bog'liq emas, bir zumda (0ms kechikish bilan) ochiladi.</li>
+        <li>Shaxsiy maqsadlar, moliyaviy rejalar va hayot balansi mutlaq maxfiy qoladi.</li>
+        <li>JSON formatida xavfsiz eksport va import qilish imkoniyati.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Bulutli Sinxronizatsiya (Cloud Sync — Supabase / Firebase)</h3>
+      <p>Email yoki Google orqali kirish bilan ma'lumotlar bulutda saqlanadi:</p>
+      <ul style="margin: 8px 0 0 16px; font-size: 13px; color: #bbc7c6;">
+        <li>Boshqa telefon yoki kelajakda veb versiya ochilganda barcha rejalar avtomatik sinxronlanadi.</li>
+        <li>Tashqi backend va internet ulanishini talab qiladi.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top: 24px; background: #011d1c; border: 1px solid #003734; border-radius: 12px; padding: 20px;">
+  <div class="mockup-header" style="color: #edfffe; font-weight: 600; margin-bottom: 12px;">React Native + Expo Arxitekturasi</div>
+  <div style="background: #012624; border-radius: 8px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); font-family: monospace; font-size: 12px; color: #cbfffc; line-height: 1.6;">
+    src/<br>
+    ├── navigation/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # 5-Tab Navigation (BottomTabs)<br>
+    ├── screens/<br>
+    │ &nbsp; ├── FocusScreen.tsx &nbsp;&nbsp;&nbsp; # A1 Hero Card + 90min Chunks Timer + Haptics<br>
+    │ &nbsp; ├── GoalsScreen.tsx &nbsp;&nbsp;&nbsp; # 3 Spheres + 3 Golden Questions + KRA<br>
+    │ &nbsp; ├── PlannerScreen.tsx &nbsp; # ABCDE Sorter + 80/20 Pareto + Evening Ritual<br>
+    │ &nbsp; ├── AuditScreen.tsx &nbsp;&nbsp;&nbsp; # Time Log + TRAF Inbox + Delegation Calc<br>
+    │ &nbsp; └── BalanceScreen.tsx &nbsp; # Wheel of Life Radar + Saying No Journal<br>
+    ├── theme/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Auros Dark Tokens (Liquid Abyss, Aurora Gradients)<br>
+    └── store/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Zustand / SQLite Local State<br>
+  </div>
+</div>
