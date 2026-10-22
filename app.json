@@ -15,7 +15,8 @@
         "backgroundColor": "#0D0E11"
       },
       "package": "com.focus21.executive",
-      "permissions": ["VIBRATE"]
+      "permissions": ["VIBRATE"],
+      "softwareKeyboardLayoutMode": "pan"
     },
     "plugins": []
   }
