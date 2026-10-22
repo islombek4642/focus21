@@ -7,6 +7,7 @@ import { THEME } from './src/constants/theme.ts';
 import { RootNavigator } from './src/navigation/RootNavigator.tsx';
 import { SettingsModal } from './src/components/SettingsModal.tsx';
 import { OnboardingModal } from './src/components/common/OnboardingModal.tsx';
+import { ExecutiveSplashScreen } from './src/components/common/ExecutiveSplashScreen.tsx';
 import { useTranslation } from './src/services/i18n.ts';
 import { useSettingsStore } from './src/store/settingsStore.ts';
 
@@ -23,6 +24,7 @@ const navTheme = {
 };
 
 export default function App() {
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(() => useSettingsStore.getState().isSettingsOpen);
   const [onboardingOpen, setOnboardingOpen] = useState(
     () => !useSettingsStore.getState().hasSeenOnboarding || useSettingsStore.getState().isOnboardingOpen
@@ -54,13 +56,22 @@ export default function App() {
           onClose={() => useSettingsStore.getState().setSettingsOpen(false)}
         />
 
-        <OnboardingModal
-          visible={onboardingOpen}
-          onClose={() => {
-            useSettingsStore.getState().setHasSeenOnboarding(true);
-            useSettingsStore.getState().setOnboardingOpen(false);
-          }}
-        />
+        {!isSplashVisible && (
+          <OnboardingModal
+            visible={onboardingOpen}
+            onClose={() => {
+              useSettingsStore.getState().setHasSeenOnboarding(true);
+              useSettingsStore.getState().setOnboardingOpen(false);
+            }}
+          />
+        )}
+
+        {isSplashVisible && (
+          <ExecutiveSplashScreen
+            durationMs={1800}
+            onFinish={() => setIsSplashVisible(false)}
+          />
+        )}
       </View>
     </SafeAreaProvider>
   );

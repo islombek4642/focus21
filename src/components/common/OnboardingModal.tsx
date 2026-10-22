@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { StyleSheet, View, Text, Modal, TouchableOpacity, Animated } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from './VectorIcon.tsx';
@@ -13,6 +13,11 @@ export interface OnboardingModalProps {
 export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClose }) => {
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Animation values
+  const contentFade = useRef(new Animated.Value(1)).current;
+  const contentTranslateY = useRef(new Animated.Value(0)).current;
+  const emblemScale = useRef(new Animated.Value(1)).current;
 
   const slides = [
     {
@@ -44,9 +49,65 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     },
   ];
 
+  // Reset animations when modal opens
+  useEffect(() => {
+    if (visible) {
+      setCurrentSlide(0);
+      contentFade.setValue(1);
+      contentTranslateY.setValue(0);
+      emblemScale.setValue(1);
+    }
+  }, [visible]);
+
+  const animateToSlide = (nextIndex: number) => {
+    // 1. Smooth exit transition
+    Animated.parallel([
+      Animated.timing(contentFade, {
+        toValue: 0,
+        duration: 160,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentTranslateY, {
+        toValue: -15,
+        duration: 160,
+        useNativeDriver: true,
+      }),
+      Animated.timing(emblemScale, {
+        toValue: 0.88,
+        duration: 160,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      // 2. Change state
+      setCurrentSlide(nextIndex);
+      contentTranslateY.setValue(18);
+
+      // 3. Smooth entrance spring
+      Animated.parallel([
+        Animated.timing(contentFade, {
+          toValue: 1,
+          duration: 220,
+          useNativeDriver: true,
+        }),
+        Animated.spring(contentTranslateY, {
+          toValue: 0,
+          friction: 7,
+          tension: 60,
+          useNativeDriver: true,
+        }),
+        Animated.spring(emblemScale, {
+          toValue: 1,
+          friction: 6,
+          tension: 60,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    });
+  };
+
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
+      animateToSlide(currentSlide + 1);
     } else {
       handleComplete();
     }
@@ -74,16 +135,24 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
           </TouchableOpacity>
         </View>
 
-        {/* Slide Content Card */}
-        <View style={styles.contentArea}>
-          {/* Main Visual Emblem */}
-          <View style={styles.emblemContainer}>
+        {/* Animated Slide Content */}
+        <Animated.View
+          style={[
+            styles.contentArea,
+            {
+              opacity: contentFade,
+              transform: [{ translateY: contentTranslateY }],
+            },
+          ]}
+        >
+          {/* Main Visual Emblem with Spring Scale */}
+          <Animated.View style={[styles.emblemContainer, { transform: [{ scale: emblemScale }] }]}>
             <View style={styles.outerGlowRing}>
               <View style={styles.innerEmblemBox}>
                 <VectorIcon name={activeSlide.icon} size={42} color={THEME.colors.accent} />
               </View>
             </View>
-          </View>
+          </Animated.View>
 
           {/* Principle Badge */}
           <View style={styles.principleBadge}>
@@ -103,20 +172,25 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
             <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
             <Text style={styles.tagText}>{activeSlide.featureTag}</Text>
           </View>
-        </View>
+        </Animated.View>
 
         {/* Footer: Indicator & Next Button */}
         <View style={styles.footer}>
           {/* Dots Indicator */}
           <View style={styles.indicatorContainer}>
             {slides.map((_, i) => (
-              <View
+              <TouchableOpacity
                 key={i}
-                style={[
-                  styles.dot,
-                  currentSlide === i && styles.dotActive,
-                ]}
-              />
+                onPress={() => i !== currentSlide && animateToSlide(i)}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    styles.dot,
+                    currentSlide === i && styles.dotActive,
+                  ]}
+                />
+              </TouchableOpacity>
             ))}
           </View>
 
@@ -184,7 +258,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: THEME.spacing.md,
   },
   emblemContainer: {
-    marginBottom: 28,
+    marginBottom: 26,
   },
   outerGlowRing: {
     width: 120,
@@ -268,7 +342,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#262A36',
   },
   dotActive: {
-    width: 22,
+    width: 24,
     backgroundColor: THEME.colors.accent,
   },
   nextBtn: {
