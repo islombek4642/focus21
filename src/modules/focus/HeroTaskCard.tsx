@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     borderColor: THEME.colors.border,
     padding: THEME.spacing.md,
     marginTop: THEME.spacing.md,
+    marginBottom: THEME.spacing.md,
   },
   topRow: {
     flexDirection: 'row',

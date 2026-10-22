@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: THEME.spacing.md,
     paddingTop: THEME.spacing.xs,
-    paddingBottom: THEME.spacing.xl,
+    paddingBottom: 64,
   },
   container: {
     flex: 1,
