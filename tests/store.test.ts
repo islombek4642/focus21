@@ -103,4 +103,19 @@ describe('Zustand Offline-First Stores & Backup', () => {
     const result = importAllData('{ invalid json ]');
     assert.strictEqual(result, false);
   });
+
+  it('settingsStore: must manage onboarding seen and open state', async () => {
+    const { useSettingsStore } = await import('../src/store/settingsStore.ts');
+    const store = useSettingsStore.getState();
+    assert.strictEqual(typeof store.hasSeenOnboarding, 'boolean');
+    assert.strictEqual(typeof store.isOnboardingOpen, 'boolean');
+
+    store.setHasSeenOnboarding(true);
+    assert.strictEqual(useSettingsStore.getState().hasSeenOnboarding, true);
+
+    store.setOnboardingOpen(true);
+    assert.strictEqual(useSettingsStore.getState().isOnboardingOpen, true);
+    store.setOnboardingOpen(false);
+    assert.strictEqual(useSettingsStore.getState().isOnboardingOpen, false);
+  });
 });

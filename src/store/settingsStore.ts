@@ -3,7 +3,8 @@
  * Manages locale choice and app preferences
  */
 
-import { SupportedLanguage, setLanguage } from '../services/i18n.ts';
+import type { SupportedLanguage } from '../services/i18n.ts';
+import { setLanguage } from '../services/i18n.ts';
 
 export interface SettingsState {
   language: SupportedLanguage;
@@ -12,6 +13,10 @@ export interface SettingsState {
   setHapticsEnabled: (enabled: boolean) => void;
   isSettingsOpen: boolean;
   setSettingsOpen: (open: boolean) => void;
+  hasSeenOnboarding: boolean;
+  setHasSeenOnboarding: (seen: boolean) => void;
+  isOnboardingOpen: boolean;
+  setOnboardingOpen: (open: boolean) => void;
 }
 
 type Listener = () => void;
@@ -36,6 +41,16 @@ class SettingsStore {
       isSettingsOpen: false,
       setSettingsOpen: (open) => {
         this.state.isSettingsOpen = open;
+        this.notify();
+      },
+      hasSeenOnboarding: false,
+      setHasSeenOnboarding: (seen) => {
+        this.state.hasSeenOnboarding = seen;
+        this.notify();
+      },
+      isOnboardingOpen: false,
+      setOnboardingOpen: (open) => {
+        this.state.isOnboardingOpen = open;
         this.notify();
       },
     };

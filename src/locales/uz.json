@@ -24,7 +24,8 @@
     "importSuccessTitle": "Muvaffaqiyatli tiklandi",
     "importSuccessMsg": "Barcha yozuvlaringiz zaxiradan to'liq tiklandi.",
     "importErrorTitle": "Xatolik",
-    "importErrorMsg": "JSON formati yaroqsiz yoki noto'g'ri."
+    "importErrorMsg": "JSON formati yaroqsiz yoki noto'g'ri.",
+    "viewOnboarding": "Ilova bo'yicha qo'llanma"
   },
   "tabs": {
     "focus": "Focus",
@@ -35,6 +36,8 @@
   },
   "focus": {
     "subtitle": "Executive OS",
+    "dailyPrincipleTitle": "Kunning Treysi Tamoyili",
+    "dailyPrincipleBadge": "{number}-tamoyil",
     "doItNow": "HOZIR BAJARING",
     "pause": "TO'XTATISH",
     "resume": "DAVOM ETISH",
@@ -206,6 +209,19 @@
     "emptySayingNo": "Hali rad etilgan iltimoslar yo'q. 'Yo'q' deyish hayotingizdan yuzlab soatlarni tejaydi.",
     "delayScript": "'Bu haqda o'ylab ko'rishim kerak, 24 soatdan so'ng javob beraman'",
     "addRefusal": "Rad Etilgan Iltimosni Qayd Qilish"
+  },
+  "onboarding": {
+    "welcomeTitle": "Focus 21: Ijroiya Mahsuldorlik",
+    "welcomeSubtitle": "Brayan Treysining 21 ta yuqori natijadorlik tamoyili",
+    "slide1Title": "90 Daqiqalik Fokus Bloki",
+    "slide1Desc": "15 va 16-tamoyillar: Chalg'imasdan bitta eng muhim [A-1] vazifa ustida ishlash odati.",
+    "slide2Title": "ABCDE va Pareto 80/20",
+    "slide2Desc": "3 va 4-tamoyillar: Natijangizning 80%ini beruvchi eng yuqori 20% ishlarni ajratib oling.",
+    "slide3Title": "TRAF Taftishi va Balans",
+    "slide3Desc": "14 va 21-tamoyillar: Ishlarni faqat bir marta ushlang va hayot sifatini saqlang.",
+    "nextBtn": "Keyingisi",
+    "finishBtn": "Ishni Boshlash",
+    "skipBtn": "O'tkazib yuborish"
   },
   "principles": {
     "1": { "title": "Maqsadlar", "summary": "3 ta soha bo'yicha 1-5 yillik aniq yozma maqsadlar belgilang." },

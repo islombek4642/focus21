@@ -24,7 +24,8 @@
     "importSuccessTitle": "Successfully Restored",
     "importSuccessMsg": "All your records were completely restored from backup.",
     "importErrorTitle": "Error",
-    "importErrorMsg": "Invalid or corrupt JSON format."
+    "importErrorMsg": "Invalid or corrupt JSON format.",
+    "viewOnboarding": "View App Walkthrough"
   },
   "tabs": {
     "focus": "Focus",
@@ -35,6 +36,8 @@
   },
   "focus": {
     "subtitle": "Executive OS",
+    "dailyPrincipleTitle": "Daily Tracy Principle",
+    "dailyPrincipleBadge": "Principle #{number}",
     "doItNow": "DO IT NOW",
     "pause": "PAUSE",
     "resume": "RESUME",
@@ -206,6 +209,19 @@
     "emptySayingNo": "No declined requests yet. Saying 'No' reclaims hundreds of hours in your life.",
     "delayScript": "'Let me think about that and get back to you within 24 hours.'",
     "addRefusal": "Record Declined Request"
+  },
+  "onboarding": {
+    "welcomeTitle": "Focus 21: Executive Productivity",
+    "welcomeSubtitle": "Brian Tracy's 21 High-Performance Principles",
+    "slide1Title": "90-Minute Focus Chunk",
+    "slide1Desc": "Principles #15 & #16: Single-handling on your most critical [A-1] task without interruption.",
+    "slide2Title": "ABCDE & Pareto 80/20",
+    "slide2Desc": "Principles #3 & #4: Isolate top 20% high-payoff tasks generating 80% of your results.",
+    "slide3Title": "TRAF Triage & Life Balance",
+    "slide3Desc": "Principles #14 & #21: Handle inputs only once and maintain peak quality of life.",
+    "nextBtn": "Next",
+    "finishBtn": "Get Started",
+    "skipBtn": "Skip"
   },
   "principles": {
     "1": { "title": "Goals", "summary": "Set 1-5 year written goals across 3 core life areas." },
