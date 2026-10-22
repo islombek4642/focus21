@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { THEME } from './src/constants/theme.ts';
@@ -25,8 +26,9 @@ export default function App() {
   const { language } = useTranslation();
 
   return (
-    <SafeAreaView style={styles.root}>
-      <StatusBar style="light" />
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.root}>
+        <StatusBar style="light" />
 
       {/* Floating Settings Gear Trigger */}
       <View style={styles.topBar}>
@@ -47,7 +49,8 @@ export default function App() {
         visible={settingsOpen}
         onClose={() => setSettingsOpen(false)}
       />
-    </SafeAreaView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
