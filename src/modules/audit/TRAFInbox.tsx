@@ -27,36 +27,36 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
     switch (cat) {
       case 'toss':
         return {
-          label: 'TOSS',
+          label: t('audit.trafToss', { defaultValue: 'Toss' }),
           icon: 'trash-2',
           color: THEME.colors.danger,
           bg: '#2A1010',
-          desc: 'Discard immediately',
+          desc: t('audit.trafTossDesc', { defaultValue: 'Darhol tashlash' }),
         };
       case 'refer':
         return {
-          label: 'REFER',
+          label: t('audit.trafRefer', { defaultValue: 'Refer' }),
           icon: 'share-2',
           color: '#F97316',
           bg: '#2B1A0D',
-          desc: 'Delegate to subordinate',
+          desc: t('audit.trafReferDesc', { defaultValue: 'Boshqalarga topshirish' }),
         };
       case 'action':
         return {
-          label: 'ACTION',
+          label: t('audit.trafAction', { defaultValue: 'Action' }),
           icon: 'check-circle',
           color: THEME.colors.accent,
           bg: '#261F10',
-          desc: 'Put in [A] priority list',
+          desc: t('audit.trafActionDesc', { defaultValue: '[A] rejaga kiritish' }),
         };
       case 'file':
       default:
         return {
-          label: 'FILE',
+          label: t('audit.trafFile', { defaultValue: 'File' }),
           icon: 'folder',
           color: '#60A5FA',
           bg: '#14223A',
-          desc: 'Archive for reference',
+          desc: t('audit.trafFileDesc', { defaultValue: 'Arxivga saqlash' }),
         };
     }
   };
@@ -198,18 +198,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 9,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
-    gap: 8,
+    gap: 7,
   },
   triageBtnInfo: {
     flex: 1,
+    minWidth: 0,
   },
   triageBtnText: {
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 0.5,
+    fontSize: 10.5,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   triageBtnDesc: {
     fontSize: 9,
