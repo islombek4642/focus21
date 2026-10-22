@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.root}>
-      <StatusBar style="light" backgroundColor={THEME.colors.canvas} />
+      <StatusBar style="light" />
 
       {/* Floating Settings Gear Trigger */}
       <View style={styles.topBar}>
