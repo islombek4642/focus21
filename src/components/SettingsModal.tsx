@@ -113,6 +113,29 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               ))}
             </View>
 
+            {/* App Walkthrough Guide */}
+            <View style={styles.section}>
+              <Text style={styles.sectionLabel}>
+                {t('common.viewOnboarding', { defaultValue: 'APP WALKTHROUGH' })}
+              </Text>
+              <TouchableOpacity
+                style={styles.guideBtn}
+                onPress={() => {
+                  onClose();
+                  useSettingsStore.getState().setOnboardingOpen(true);
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={styles.guideLeft}>
+                  <VectorIcon name="compass" size={16} color={THEME.colors.accent} />
+                  <Text style={styles.guideText}>
+                    {t('common.viewOnboarding', { defaultValue: "Ilova bo'yicha qo'llanma" })}
+                  </Text>
+                </View>
+                <VectorIcon name="chevron-right" size={16} color={THEME.colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+
             {/* Offline Data Backup & Restore */}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>
@@ -342,6 +365,27 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: THEME.colors.textSecondary,
     lineHeight: 15,
+  },
+  guideBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#161922',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: THEME.radii.md,
+    borderWidth: 1,
+    borderColor: 'rgba(229, 169, 60, 0.2)',
+  },
+  guideLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  guideText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: THEME.colors.textPrimary,
   },
   footer: {
     paddingTop: THEME.spacing.xs,

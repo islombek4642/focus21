@@ -6,6 +6,7 @@ import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { THEME } from './src/constants/theme.ts';
 import { RootNavigator } from './src/navigation/RootNavigator.tsx';
 import { SettingsModal } from './src/components/SettingsModal.tsx';
+import { OnboardingModal } from './src/components/common/OnboardingModal.tsx';
 import { useTranslation } from './src/services/i18n.ts';
 import { useSettingsStore } from './src/store/settingsStore.ts';
 
@@ -23,11 +24,16 @@ const navTheme = {
 
 export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(() => useSettingsStore.getState().isSettingsOpen);
+  const [onboardingOpen, setOnboardingOpen] = useState(
+    () => !useSettingsStore.getState().hasSeenOnboarding || useSettingsStore.getState().isOnboardingOpen
+  );
   const { language } = useTranslation();
 
   useEffect(() => {
     const unsub = useSettingsStore.subscribe(() => {
-      setSettingsOpen(useSettingsStore.getState().isSettingsOpen);
+      const state = useSettingsStore.getState();
+      setSettingsOpen(state.isSettingsOpen);
+      setOnboardingOpen(!state.hasSeenOnboarding || state.isOnboardingOpen);
     });
     return () => {
       unsub();
@@ -46,6 +52,14 @@ export default function App() {
         <SettingsModal
           visible={settingsOpen}
           onClose={() => useSettingsStore.getState().setSettingsOpen(false)}
+        />
+
+        <OnboardingModal
+          visible={onboardingOpen}
+          onClose={() => {
+            useSettingsStore.getState().setHasSeenOnboarding(true);
+            useSettingsStore.getState().setOnboardingOpen(false);
+          }}
         />
       </View>
     </SafeAreaProvider>
