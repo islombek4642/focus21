@@ -22,6 +22,7 @@ export const RootNavigator: React.FC = () => {
       initialRouteName={ROUTES.FOCUS}
       screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: THEME.colors.accent,
         tabBarInactiveTintColor: THEME.colors.textTertiary,

@@ -116,7 +116,11 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          <ScrollView style={styles.scrollArea} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.scrollArea}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
             {/* Quick Create [A-1] Task Section */}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>

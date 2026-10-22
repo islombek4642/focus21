@@ -79,7 +79,11 @@ export const EveningRitualModal: React.FC<EveningRitualModalProps> = ({
             })}
           </Text>
 
-          <ScrollView style={styles.scrollArea} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.scrollArea}
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+          >
             {/* Today's Accomplishments */}
             <View style={styles.section}>
               <View style={styles.sectionTitleRow}>

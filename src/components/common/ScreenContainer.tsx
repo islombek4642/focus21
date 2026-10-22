@@ -21,6 +21,8 @@ export const ScreenContainer: React.FC<ScreenContainerProps> = ({
           style={styles.scrollView}
           contentContainerStyle={[styles.contentContainer, style]}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         >
           {children}
         </ScrollView>
