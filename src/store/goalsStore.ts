@@ -9,6 +9,7 @@ export interface Goal {
   id: string;
   sphere: GoalSphere;
   title: string;
+  completed?: boolean;
   createdAt: number;
 }
 
@@ -16,6 +17,7 @@ export interface GoldenQuestions {
   q1Lottery: string;
   q2SixMonths: string;
   q3DareToDream: string;
+  q3NoFailure?: string;
 }
 
 export interface KRAItem {
@@ -29,6 +31,7 @@ export interface GoalsState {
   goldenQuestions: GoldenQuestions;
   kraList: KRAItem[];
   addGoal: (sphere: GoalSphere, title: string) => void;
+  toggleGoal: (id: string) => void;
   deleteGoal: (id: string) => void;
   setGoldenQuestionAnswer: (question: keyof GoldenQuestions, answer: string) => void;
   addKra: (title: string, rank?: number) => void;
@@ -50,6 +53,7 @@ class GoalsStore {
         q1Lottery: '',
         q2SixMonths: '',
         q3DareToDream: '',
+        q3NoFailure: '',
       },
       kraList: [],
       addGoal: (sphere, title) => {
@@ -57,9 +61,16 @@ class GoalsStore {
           id: `goal-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
           sphere,
           title,
+          completed: false,
           createdAt: Date.now(),
         };
         this.state.goals = [...this.state.goals, newGoal];
+        this.notify();
+      },
+      toggleGoal: (id) => {
+        this.state.goals = this.state.goals.map((g) =>
+          g.id === id ? { ...g, completed: !g.completed } : g
+        );
         this.notify();
       },
       deleteGoal: (id) => {
@@ -71,6 +82,11 @@ class GoalsStore {
           ...this.state.goldenQuestions,
           [question]: answer,
         };
+        if (question === 'q3DareToDream') {
+          this.state.goldenQuestions.q3NoFailure = answer;
+        } else if (question === 'q3NoFailure') {
+          this.state.goldenQuestions.q3DareToDream = answer;
+        }
         this.notify();
       },
       addKra: (title, rank = 1) => {
@@ -88,7 +104,12 @@ class GoalsStore {
       },
       reset: () => {
         this.state.goals = [];
-        this.state.goldenQuestions = { q1Lottery: '', q2SixMonths: '', q3DareToDream: '' };
+        this.state.goldenQuestions = {
+          q1Lottery: '',
+          q2SixMonths: '',
+          q3DareToDream: '',
+          q3NoFailure: '',
+        };
         this.state.kraList = [];
         this.notify();
       },
