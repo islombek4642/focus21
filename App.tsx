@@ -56,7 +56,7 @@ export default function App() {
           onClose={() => useSettingsStore.getState().setSettingsOpen(false)}
         />
 
-        {!isSplashVisible && (
+        {onboardingOpen && (
           <OnboardingModal
             visible={onboardingOpen}
             onClose={() => {

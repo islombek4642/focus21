@@ -3,7 +3,6 @@ import {
   StyleSheet,
   View,
   Text,
-  Modal,
   TouchableOpacity,
   ScrollView,
   Dimensions,
@@ -64,6 +63,10 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     }
   }, [visible]);
 
+  if (!visible) {
+    return null;
+  }
+
   const goToSlide = (nextIndex: number) => {
     if (nextIndex >= 0 && nextIndex < slides.length) {
       setCurrentSlide(nextIndex);
@@ -94,110 +97,113 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
   };
 
   return (
-    <Modal visible={visible} animationType="fade" transparent={false}>
-      <View style={styles.container}>
-        {/* Top Header */}
-        <View style={styles.topBar}>
-          <View style={styles.brandBadge}>
-            <VectorIcon name="compass" size={14} color={THEME.colors.accent} />
-            <Text style={styles.brandTitle}>FOCUS 21</Text>
-          </View>
-          <TouchableOpacity onPress={handleComplete} style={styles.skipBtn} activeOpacity={0.7}>
-            <Text style={styles.skipText}>{t('onboarding.skipBtn', { defaultValue: 'Skip' })}</Text>
-          </TouchableOpacity>
+    <View style={styles.container}>
+      {/* Top Header */}
+      <View style={styles.topBar}>
+        <View style={styles.brandBadge}>
+          <VectorIcon name="compass" size={14} color={THEME.colors.accent} />
+          <Text style={styles.brandTitle}>FOCUS 21</Text>
         </View>
+        <TouchableOpacity onPress={handleComplete} style={styles.skipBtn} activeOpacity={0.7}>
+          <Text style={styles.skipText}>{t('onboarding.skipBtn', { defaultValue: 'Skip' })}</Text>
+        </TouchableOpacity>
+      </View>
 
-        {/* Horizontal Swipeable Slides */}
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          scrollEventThrottle={16}
-          onMomentumScrollEnd={handleScrollEnd}
-          contentContainerStyle={styles.scrollContent}
-        >
-          {slides.map((slide, index) => (
-            <View key={index} style={[styles.slideCard, { width: SCREEN_WIDTH }]}>
-              {/* Luxury Emblem */}
-              <View style={styles.emblemContainer}>
-                <View style={styles.outerGlowRing}>
-                  <View style={styles.innerEmblemBox}>
-                    <VectorIcon name={slide.icon} size={42} color={THEME.colors.accent} />
-                  </View>
+      {/* Horizontal Swipeable Slides */}
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        bounces={false}
+        scrollEventThrottle={16}
+        onMomentumScrollEnd={handleScrollEnd}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {slides.map((slide, index) => (
+          <View key={index} style={[styles.slideCard, { width: SCREEN_WIDTH }]}>
+            {/* Luxury Emblem */}
+            <View style={styles.emblemContainer}>
+              <View style={styles.outerGlowRing}>
+                <View style={styles.innerEmblemBox}>
+                  <VectorIcon name={slide.icon} size={42} color={THEME.colors.accent} />
                 </View>
               </View>
-
-              {/* Principle Badge */}
-              <View style={styles.principleBadge}>
-                <Text style={styles.principleBadgeText}>{slide.badge}</Text>
-              </View>
-
-              {/* Title & Desc */}
-              <Text style={styles.title}>
-                {t(slide.titleKey, { defaultValue: slide.defaultTitle })}
-              </Text>
-              <Text style={styles.description}>
-                {t(slide.descKey, { defaultValue: slide.defaultDesc })}
-              </Text>
-
-              {/* Feature Tag */}
-              <View style={styles.tagBox}>
-                <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
-                <Text style={styles.tagText}>{slide.featureTag}</Text>
-              </View>
             </View>
-          ))}
-        </ScrollView>
 
-        {/* Footer: Indicator & Next Button */}
-        <View style={styles.footer}>
-          {/* Dots Indicator */}
-          <View style={styles.indicatorContainer}>
-            {slides.map((_, i) => (
-              <TouchableOpacity
-                key={i}
-                onPress={() => goToSlide(i)}
-                activeOpacity={0.7}
-                hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
-              >
-                <View
-                  style={[
-                    styles.dot,
-                    currentSlide === i && styles.dotActive,
-                  ]}
-                />
-              </TouchableOpacity>
-            ))}
-          </View>
+            {/* Principle Badge */}
+            <View style={styles.principleBadge}>
+              <Text style={styles.principleBadgeText}>{slide.badge}</Text>
+            </View>
 
-          {/* Action Button */}
-          <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.8}>
-            <Text style={styles.nextBtnText}>
-              {currentSlide === slides.length - 1
-                ? t('onboarding.finishBtn', { defaultValue: 'Get Started' })
-                : t('onboarding.nextBtn', { defaultValue: 'Next' })}
+            {/* Title & Desc */}
+            <Text style={styles.title}>
+              {t(slide.titleKey, { defaultValue: slide.defaultTitle })}
             </Text>
-            <VectorIcon
-              name={currentSlide === slides.length - 1 ? 'check' : 'chevron-right'}
-              size={16}
-              color="#000000"
-            />
-          </TouchableOpacity>
+            <Text style={styles.description}>
+              {t(slide.descKey, { defaultValue: slide.defaultDesc })}
+            </Text>
+
+            {/* Feature Tag */}
+            <View style={styles.tagBox}>
+              <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
+              <Text style={styles.tagText}>{slide.featureTag}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Footer: Indicator & Next Button */}
+      <View style={styles.footer}>
+        {/* Dots Indicator */}
+        <View style={styles.indicatorContainer}>
+          {slides.map((_, i) => (
+            <TouchableOpacity
+              key={i}
+              onPress={() => goToSlide(i)}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
+            >
+              <View
+                style={[
+                  styles.dot,
+                  currentSlide === i && styles.dotActive,
+                ]}
+              />
+            </TouchableOpacity>
+          ))}
         </View>
+
+        {/* Action Button */}
+        <TouchableOpacity style={styles.nextBtn} onPress={handleNext} activeOpacity={0.8}>
+          <Text style={styles.nextBtnText}>
+            {currentSlide === slides.length - 1
+              ? t('onboarding.finishBtn', { defaultValue: 'Get Started' })
+              : t('onboarding.nextBtn', { defaultValue: 'Next' })}
+          </Text>
+          <VectorIcon
+            name={currentSlide === slides.length - 1 ? 'check' : 'chevron-right'}
+            size={16}
+            color="#000000"
+          />
+        </TouchableOpacity>
       </View>
-    </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: THEME.colors.canvas,
     paddingTop: 50,
     paddingBottom: 36,
     justifyContent: 'space-between',
+    zIndex: 10000,
   },
   topBar: {
     flexDirection: 'row',
