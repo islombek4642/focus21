@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Animated,
   Dimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
@@ -23,6 +24,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const scrollViewRef = useRef<React.ElementRef<typeof ScrollView>>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
   const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
   const slides = [
@@ -55,10 +57,24 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     },
   ];
 
+  // Sync current slide index as user scrolls across thresholds
+  useEffect(() => {
+    const listenerId = scrollX.addListener(({ value }) => {
+      const pageIndex = Math.round(value / SCREEN_WIDTH);
+      if (pageIndex >= 0 && pageIndex < slides.length) {
+        setCurrentSlide((prev) => (prev !== pageIndex ? pageIndex : prev));
+      }
+    });
+    return () => {
+      scrollX.removeListener(listenerId);
+    };
+  }, [SCREEN_WIDTH, slides.length]);
+
   // Reset scroll position and state when modal becomes visible
   useEffect(() => {
     if (visible) {
       setCurrentSlide(0);
+      scrollX.setValue(0);
       scrollViewRef.current?.scrollTo({ x: 0, animated: false });
     }
   }, [visible]);
@@ -71,14 +87,6 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     if (nextIndex >= 0 && nextIndex < slides.length) {
       setCurrentSlide(nextIndex);
       scrollViewRef.current?.scrollTo({ x: nextIndex * SCREEN_WIDTH, animated: true });
-    }
-  };
-
-  const handleScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetX = e.nativeEvent.contentOffset.x;
-    const pageIndex = Math.round(offsetX / SCREEN_WIDTH);
-    if (pageIndex >= 0 && pageIndex < slides.length && pageIndex !== currentSlide) {
-      setCurrentSlide(pageIndex);
     }
   };
 
@@ -109,69 +117,151 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
         </TouchableOpacity>
       </View>
 
-      {/* Horizontal Swipeable Slides */}
+      {/* Horizontal Swipeable Slides with Liquid Transitions */}
       <ScrollView
         ref={scrollViewRef}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         bounces={false}
+        decelerationRate="fast"
+        snapToInterval={SCREEN_WIDTH}
+        snapToAlignment="center"
+        overScrollMode="never"
         scrollEventThrottle={16}
-        onMomentumScrollEnd={handleScrollEnd}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+          { useNativeDriver: false }
+        )}
         contentContainerStyle={styles.scrollContent}
       >
-        {slides.map((slide, index) => (
-          <View key={index} style={[styles.slideCard, { width: SCREEN_WIDTH }]}>
-            {/* Luxury Emblem */}
-            <View style={styles.emblemContainer}>
-              <View style={styles.outerGlowRing}>
-                <View style={styles.innerEmblemBox}>
-                  <VectorIcon name={slide.icon} size={42} color={THEME.colors.accent} />
+        {slides.map((slide, index) => {
+          const inputRange = [
+            (index - 1) * SCREEN_WIDTH,
+            index * SCREEN_WIDTH,
+            (index + 1) * SCREEN_WIDTH,
+          ];
+
+          // Smooth depth scale & opacity interpolation per card
+          const cardScale = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.9, 1, 0.9],
+            extrapolate: 'clamp',
+          });
+
+          const cardOpacity = scrollX.interpolate({
+            inputRange,
+            outputRange: [0.35, 1, 0.35],
+            extrapolate: 'clamp',
+          });
+
+          const emblemTranslateY = scrollX.interpolate({
+            inputRange,
+            outputRange: [14, 0, 14],
+            extrapolate: 'clamp',
+          });
+
+          return (
+            <Animated.View
+              key={index}
+              style={[
+                styles.slideCard,
+                {
+                  width: SCREEN_WIDTH,
+                  opacity: cardOpacity,
+                  transform: [{ scale: cardScale }],
+                },
+              ]}
+            >
+              {/* Luxury Emblem with vertical float */}
+              <Animated.View
+                style={[
+                  styles.emblemContainer,
+                  { transform: [{ translateY: emblemTranslateY }] },
+                ]}
+              >
+                <View style={styles.outerGlowRing}>
+                  <View style={styles.innerEmblemBox}>
+                    <VectorIcon name={slide.icon} size={42} color={THEME.colors.accent} />
+                  </View>
                 </View>
+              </Animated.View>
+
+              {/* Principle Badge */}
+              <View style={styles.principleBadge}>
+                <Text style={styles.principleBadgeText}>{slide.badge}</Text>
               </View>
-            </View>
 
-            {/* Principle Badge */}
-            <View style={styles.principleBadge}>
-              <Text style={styles.principleBadgeText}>{slide.badge}</Text>
-            </View>
+              {/* Title & Desc */}
+              <Text style={styles.title}>
+                {t(slide.titleKey, { defaultValue: slide.defaultTitle })}
+              </Text>
+              <Text style={styles.description}>
+                {t(slide.descKey, { defaultValue: slide.defaultDesc })}
+              </Text>
 
-            {/* Title & Desc */}
-            <Text style={styles.title}>
-              {t(slide.titleKey, { defaultValue: slide.defaultTitle })}
-            </Text>
-            <Text style={styles.description}>
-              {t(slide.descKey, { defaultValue: slide.defaultDesc })}
-            </Text>
-
-            {/* Feature Tag */}
-            <View style={styles.tagBox}>
-              <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
-              <Text style={styles.tagText}>{slide.featureTag}</Text>
-            </View>
-          </View>
-        ))}
+              {/* Feature Tag */}
+              <View style={styles.tagBox}>
+                <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
+                <Text style={styles.tagText}>{slide.featureTag}</Text>
+              </View>
+            </Animated.View>
+          );
+        })}
       </ScrollView>
 
-      {/* Footer: Indicator & Next Button */}
+      {/* Footer: Liquid Morphing Dots & Next Button */}
       <View style={styles.footer}>
-        {/* Dots Indicator */}
+        {/* Dynamic Liquid Dots Indicator */}
         <View style={styles.indicatorContainer}>
-          {slides.map((_, i) => (
-            <TouchableOpacity
-              key={i}
-              onPress={() => goToSlide(i)}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
-            >
-              <View
-                style={[
-                  styles.dot,
-                  currentSlide === i && styles.dotActive,
-                ]}
-              />
-            </TouchableOpacity>
-          ))}
+          {slides.map((_, i) => {
+            const inputRange = [
+              (i - 1) * SCREEN_WIDTH,
+              i * SCREEN_WIDTH,
+              (i + 1) * SCREEN_WIDTH,
+            ];
+
+            // Fluid width morph: 8px idle -> 26px active pill -> 8px idle
+            const dotWidth = scrollX.interpolate({
+              inputRange,
+              outputRange: [8, 26, 8],
+              extrapolate: 'clamp',
+            });
+
+            // Smooth opacity transition
+            const dotOpacity = scrollX.interpolate({
+              inputRange,
+              outputRange: [0.35, 1, 0.35],
+              extrapolate: 'clamp',
+            });
+
+            // Smooth color morph from dark slate to brilliant gold
+            const dotColor = scrollX.interpolate({
+              inputRange,
+              outputRange: ['#2A2E3D', THEME.colors.accent, '#2A2E3D'],
+              extrapolate: 'clamp',
+            });
+
+            return (
+              <TouchableOpacity
+                key={i}
+                onPress={() => goToSlide(i)}
+                activeOpacity={0.7}
+                hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}
+              >
+                <Animated.View
+                  style={[
+                    styles.dot,
+                    {
+                      width: dotWidth,
+                      opacity: dotOpacity,
+                      backgroundColor: dotColor,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         {/* Action Button */}
@@ -323,16 +413,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    height: 12,
+    justifyContent: 'center',
   },
   dot: {
-    width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#262A36',
-  },
-  dotActive: {
-    width: 24,
-    backgroundColor: THEME.colors.accent,
   },
   nextBtn: {
     width: '100%',
