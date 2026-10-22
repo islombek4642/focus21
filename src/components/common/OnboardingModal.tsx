@@ -1,5 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, Animated } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+} from 'react-native';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from './VectorIcon.tsx';
@@ -13,11 +23,8 @@ export interface OnboardingModalProps {
 export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClose }) => {
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Animation values
-  const contentFade = useRef(new Animated.Value(1)).current;
-  const contentTranslateY = useRef(new Animated.Value(0)).current;
-  const emblemScale = useRef(new Animated.Value(1)).current;
+  const scrollViewRef = useRef<React.ElementRef<typeof ScrollView>>(null);
+  const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
   const slides = [
     {
@@ -49,65 +56,32 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     },
   ];
 
-  // Reset animations when modal opens
+  // Reset scroll position and state when modal becomes visible
   useEffect(() => {
     if (visible) {
       setCurrentSlide(0);
-      contentFade.setValue(1);
-      contentTranslateY.setValue(0);
-      emblemScale.setValue(1);
+      scrollViewRef.current?.scrollTo({ x: 0, animated: false });
     }
   }, [visible]);
 
-  const animateToSlide = (nextIndex: number) => {
-    // 1. Smooth exit transition
-    Animated.parallel([
-      Animated.timing(contentFade, {
-        toValue: 0,
-        duration: 160,
-        useNativeDriver: true,
-      }),
-      Animated.timing(contentTranslateY, {
-        toValue: -15,
-        duration: 160,
-        useNativeDriver: true,
-      }),
-      Animated.timing(emblemScale, {
-        toValue: 0.88,
-        duration: 160,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      // 2. Change state
+  const goToSlide = (nextIndex: number) => {
+    if (nextIndex >= 0 && nextIndex < slides.length) {
       setCurrentSlide(nextIndex);
-      contentTranslateY.setValue(18);
+      scrollViewRef.current?.scrollTo({ x: nextIndex * SCREEN_WIDTH, animated: true });
+    }
+  };
 
-      // 3. Smooth entrance spring
-      Animated.parallel([
-        Animated.timing(contentFade, {
-          toValue: 1,
-          duration: 220,
-          useNativeDriver: true,
-        }),
-        Animated.spring(contentTranslateY, {
-          toValue: 0,
-          friction: 7,
-          tension: 60,
-          useNativeDriver: true,
-        }),
-        Animated.spring(emblemScale, {
-          toValue: 1,
-          friction: 6,
-          tension: 60,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    });
+  const handleScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = e.nativeEvent.contentOffset.x;
+    const pageIndex = Math.round(offsetX / SCREEN_WIDTH);
+    if (pageIndex >= 0 && pageIndex < slides.length && pageIndex !== currentSlide) {
+      setCurrentSlide(pageIndex);
+    }
   };
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
-      animateToSlide(currentSlide + 1);
+      goToSlide(currentSlide + 1);
     } else {
       handleComplete();
     }
@@ -118,8 +92,6 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
     useSettingsStore.getState().setOnboardingOpen(false);
     onClose();
   };
-
-  const activeSlide = slides[currentSlide];
 
   return (
     <Modal visible={visible} animationType="fade" transparent={false}>
@@ -135,44 +107,49 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
           </TouchableOpacity>
         </View>
 
-        {/* Animated Slide Content */}
-        <Animated.View
-          style={[
-            styles.contentArea,
-            {
-              opacity: contentFade,
-              transform: [{ translateY: contentTranslateY }],
-            },
-          ]}
+        {/* Horizontal Swipeable Slides */}
+        <ScrollView
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          bounces={false}
+          scrollEventThrottle={16}
+          onMomentumScrollEnd={handleScrollEnd}
+          contentContainerStyle={styles.scrollContent}
         >
-          {/* Main Visual Emblem with Spring Scale */}
-          <Animated.View style={[styles.emblemContainer, { transform: [{ scale: emblemScale }] }]}>
-            <View style={styles.outerGlowRing}>
-              <View style={styles.innerEmblemBox}>
-                <VectorIcon name={activeSlide.icon} size={42} color={THEME.colors.accent} />
+          {slides.map((slide, index) => (
+            <View key={index} style={[styles.slideCard, { width: SCREEN_WIDTH }]}>
+              {/* Luxury Emblem */}
+              <View style={styles.emblemContainer}>
+                <View style={styles.outerGlowRing}>
+                  <View style={styles.innerEmblemBox}>
+                    <VectorIcon name={slide.icon} size={42} color={THEME.colors.accent} />
+                  </View>
+                </View>
+              </View>
+
+              {/* Principle Badge */}
+              <View style={styles.principleBadge}>
+                <Text style={styles.principleBadgeText}>{slide.badge}</Text>
+              </View>
+
+              {/* Title & Desc */}
+              <Text style={styles.title}>
+                {t(slide.titleKey, { defaultValue: slide.defaultTitle })}
+              </Text>
+              <Text style={styles.description}>
+                {t(slide.descKey, { defaultValue: slide.defaultDesc })}
+              </Text>
+
+              {/* Feature Tag */}
+              <View style={styles.tagBox}>
+                <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
+                <Text style={styles.tagText}>{slide.featureTag}</Text>
               </View>
             </View>
-          </Animated.View>
-
-          {/* Principle Badge */}
-          <View style={styles.principleBadge}>
-            <Text style={styles.principleBadgeText}>{activeSlide.badge}</Text>
-          </View>
-
-          {/* Title & Desc */}
-          <Text style={styles.title}>
-            {t(activeSlide.titleKey, { defaultValue: activeSlide.defaultTitle })}
-          </Text>
-          <Text style={styles.description}>
-            {t(activeSlide.descKey, { defaultValue: activeSlide.defaultDesc })}
-          </Text>
-
-          {/* Feature Tag */}
-          <View style={styles.tagBox}>
-            <VectorIcon name="check-circle" size={12} color={THEME.colors.accent} />
-            <Text style={styles.tagText}>{activeSlide.featureTag}</Text>
-          </View>
-        </Animated.View>
+          ))}
+        </ScrollView>
 
         {/* Footer: Indicator & Next Button */}
         <View style={styles.footer}>
@@ -181,8 +158,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({ visible, onClo
             {slides.map((_, i) => (
               <TouchableOpacity
                 key={i}
-                onPress={() => i !== currentSlide && animateToSlide(i)}
+                onPress={() => goToSlide(i)}
                 activeOpacity={0.7}
+                hitSlop={{ top: 10, bottom: 10, left: 8, right: 8 }}
               >
                 <View
                   style={[
@@ -217,7 +195,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: THEME.colors.canvas,
-    paddingHorizontal: THEME.spacing.lg,
     paddingTop: 50,
     paddingBottom: 36,
     justifyContent: 'space-between',
@@ -226,6 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: THEME.spacing.lg,
   },
   brandBadge: {
     flexDirection: 'row',
@@ -253,9 +231,13 @@ const styles = StyleSheet.create({
     color: THEME.colors.textTertiary,
     fontWeight: '600',
   },
-  contentArea: {
+  scrollContent: {
     alignItems: 'center',
-    paddingHorizontal: THEME.spacing.md,
+  },
+  slideCard: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: THEME.spacing.xl,
   },
   emblemContainer: {
     marginBottom: 26,
@@ -329,6 +311,7 @@ const styles = StyleSheet.create({
   footer: {
     alignItems: 'center',
     gap: 20,
+    paddingHorizontal: THEME.spacing.lg,
   },
   indicatorContainer: {
     flexDirection: 'row',

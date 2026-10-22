@@ -68,7 +68,7 @@ export default function App() {
 
         {isSplashVisible && (
           <ExecutiveSplashScreen
-            durationMs={1800}
+            durationMs={2600}
             onFinish={() => setIsSplashVisible(false)}
           />
         )}

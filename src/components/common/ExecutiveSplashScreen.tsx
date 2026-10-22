@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Animated, Image } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { useTranslation } from '../../services/i18n.ts';
 
 export interface ExecutiveSplashScreenProps {
   onFinish: () => void;
@@ -10,34 +9,33 @@ export interface ExecutiveSplashScreenProps {
 
 export const ExecutiveSplashScreen: React.FC<ExecutiveSplashScreenProps> = ({
   onFinish,
-  durationMs = 2000,
+  durationMs = 2600,
 }) => {
-  const { t } = useTranslation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.9)).current;
+  const scaleAnim = useRef(new Animated.Value(0.92)).current;
   const exitFade = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    // 1. Entrance animation (fade in + gentle scale up)
+    // 1. Entrance animation (fade in + spring scale up)
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 700,
+        duration: 750,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
-        friction: 7,
+        friction: 8,
         tension: 40,
         useNativeDriver: true,
       }),
     ]).start();
 
-    // 2. Timer to initiate smooth exit
+    // 2. Controlled hold duration followed by smooth exit fade
     const timer = setTimeout(() => {
       Animated.timing(exitFade, {
         toValue: 0,
-        duration: 450,
+        duration: 400,
         useNativeDriver: true,
       }).start(() => {
         onFinish();
@@ -45,10 +43,10 @@ export const ExecutiveSplashScreen: React.FC<ExecutiveSplashScreenProps> = ({
     }, durationMs);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [durationMs]);
 
   return (
-    <Animated.View style={[styles.container, { opacity: exitFade }]}>
+    <Animated.View style={[styles.container, { opacity: exitFade }]} pointerEvents="auto">
       <Animated.View
         style={[
           styles.content,
@@ -97,7 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#0D0E11',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 99999,
+    zIndex: 999999,
   },
   content: {
     alignItems: 'center',
