@@ -165,7 +165,16 @@
     "hourlyValue": "Your Hourly Rate",
     "delegationRule": "Never do any work that can be delegated to someone else for less than ${rate}/hr.",
     "lombardiTime": "Lombardi Time (+15 min early)",
-    "lombardiDesc": "If you are not 15 minutes early, you are late"
+    "lombardiDesc": "If you are not 15 minutes early, you are late",
+    "durationLabel": "Duration",
+    "categoryLabel": "Category",
+    "catFocus": "Focus",
+    "catMeeting": "Meeting",
+    "catAdmin": "Admin",
+    "catRest": "Rest",
+    "minutesShort": "min",
+    "loggedBadge": "logged",
+    "addEntry": "Log Activity"
   },
   "balance": {
     "title": "Life & Quality Balance",

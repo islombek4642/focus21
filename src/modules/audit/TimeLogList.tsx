@@ -28,11 +28,11 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
   const totalHours = (totalMinutes / 60).toFixed(1);
 
   const durationOptions = [15, 30, 60, 90];
-  const categoryOptions: { key: TimeLogCategory; label: string; icon: string }[] = [
-    { key: 'focus', label: 'Focus', icon: 'zap' },
-    { key: 'meeting', label: 'Meeting', icon: 'users' },
-    { key: 'admin', label: 'Admin', icon: 'mail' },
-    { key: 'rest', label: 'Rest', icon: 'coffee' },
+  const categoryOptions: { key: TimeLogCategory; labelKey: string; defaultLabel: string; icon: string }[] = [
+    { key: 'focus', labelKey: 'audit.catFocus', defaultLabel: 'Focus', icon: 'zap' },
+    { key: 'meeting', labelKey: 'audit.catMeeting', defaultLabel: 'Meeting', icon: 'users' },
+    { key: 'admin', labelKey: 'audit.catAdmin', defaultLabel: 'Admin', icon: 'mail' },
+    { key: 'rest', labelKey: 'audit.catRest', defaultLabel: 'Rest', icon: 'coffee' },
   ];
 
   return (
@@ -41,16 +41,19 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
         <View style={styles.headerLeft}>
           <VectorIcon name="clock" size={16} color={THEME.colors.accent} />
           <View style={styles.titles}>
-            <Text style={styles.title}>
+            <Text style={styles.title} numberOfLines={1}>
               {t('audit.timeLogTitle', { defaultValue: 'Minute-by-Minute Time Log' })}
             </Text>
-            <Text style={styles.subtitle}>
+            <Text style={styles.subtitle} numberOfLines={1}>
               {t('audit.timeLogSubtitle', { defaultValue: 'Principle #6: Track Your Time' })}
             </Text>
           </View>
         </View>
         <View style={styles.totalBadge}>
-          <Text style={styles.totalText}>{totalHours}h logged</Text>
+          <VectorIcon name="check-circle" size={11} color={THEME.colors.accent} />
+          <Text style={styles.totalText}>
+            {totalHours}h {t('audit.loggedBadge', { defaultValue: 'logged' })}
+          </Text>
         </View>
       </View>
 
@@ -64,51 +67,69 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
           onChangeText={setActivity}
         />
 
-        {/* Row 1: Duration Selector */}
-        <View style={styles.selectorRow}>
-          <Text style={styles.selectorLabel}>Vaqt:</Text>
-          <View style={styles.durationChips}>
-            {durationOptions.map((d) => (
-              <TouchableOpacity
-                key={d}
-                style={[styles.chip, duration === d && styles.chipActive]}
-                onPress={() => setDuration(d)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.chipText, duration === d && styles.chipTextActive]}>
-                  {d} daq
-                </Text>
-              </TouchableOpacity>
-            ))}
+        {/* Duration Segmented Row */}
+        <View style={styles.segmentGroup}>
+          <Text style={styles.fieldLabel}>
+            {t('audit.durationLabel', { defaultValue: 'Duration' })}
+          </Text>
+          <View style={styles.segmentRow}>
+            {durationOptions.map((d) => {
+              const isSelected = duration === d;
+              return (
+                <TouchableOpacity
+                  key={d}
+                  style={[styles.segmentBtn, isSelected && styles.segmentBtnActive]}
+                  onPress={() => setDuration(d)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.segmentBtnText, isSelected && styles.segmentBtnTextActive]}>
+                    {d} {t('audit.minutesShort', { defaultValue: 'min' })}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
-        {/* Row 2: Category Selector + Add Button */}
-        <View style={styles.categoryRow}>
-          <View style={styles.categoryChips}>
-            {categoryOptions.map((c) => (
-              <TouchableOpacity
-                key={c.key}
-                style={[styles.catChip, category === c.key && styles.catChipActive]}
-                onPress={() => setCategory(c.key)}
-                activeOpacity={0.7}
-              >
-                <VectorIcon
-                  name={c.icon}
-                  size={11}
-                  color={category === c.key ? THEME.colors.accent : THEME.colors.textSecondary}
-                />
-                <Text style={[styles.catChipText, category === c.key && styles.catChipTextActive]}>
-                  {c.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+        {/* Category Segmented Row */}
+        <View style={styles.segmentGroup}>
+          <Text style={styles.fieldLabel}>
+            {t('audit.categoryLabel', { defaultValue: 'Category' })}
+          </Text>
+          <View style={styles.segmentRow}>
+            {categoryOptions.map((c) => {
+              const isSelected = category === c.key;
+              return (
+                <TouchableOpacity
+                  key={c.key}
+                  style={[styles.catSegmentBtn, isSelected && styles.catSegmentBtnActive]}
+                  onPress={() => setCategory(c.key)}
+                  activeOpacity={0.7}
+                >
+                  <VectorIcon
+                    name={c.icon}
+                    size={11}
+                    color={isSelected ? THEME.colors.accent : THEME.colors.textSecondary}
+                  />
+                  <Text
+                    style={[styles.catSegmentText, isSelected && styles.catSegmentTextActive]}
+                    numberOfLines={1}
+                  >
+                    {t(c.labelKey, { defaultValue: c.defaultLabel })}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
-
-          <TouchableOpacity style={styles.addBtn} onPress={handleAdd} activeOpacity={0.8}>
-            <VectorIcon name="plus" size={16} color="#000000" />
-          </TouchableOpacity>
         </View>
+
+        {/* Submit Button */}
+        <TouchableOpacity style={styles.submitBtn} onPress={handleAdd} activeOpacity={0.8}>
+          <VectorIcon name="plus" size={14} color="#000000" />
+          <Text style={styles.submitBtnText}>
+            {t('audit.addEntry', { defaultValue: 'Log Activity' })}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Lombardi Time Banner (Principle #15) */}
@@ -166,16 +187,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: THEME.spacing.sm,
+    gap: 8,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+    marginRight: 6,
   },
   titles: {
     marginLeft: 8,
+    flex: 1,
+    minWidth: 0,
   },
   title: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
     color: THEME.colors.textPrimary,
   },
@@ -185,12 +212,16 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   totalBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     backgroundColor: '#1E222A',
     paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingVertical: 4,
     borderRadius: THEME.radii.full,
     borderWidth: 1,
     borderColor: THEME.colors.border,
+    flexShrink: 0,
   },
   totalText: {
     fontSize: 11,
@@ -202,94 +233,100 @@ const styles = StyleSheet.create({
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
-    padding: 8,
+    padding: 10,
     marginBottom: 8,
   },
   textInput: {
+    backgroundColor: '#171A21',
+    borderRadius: THEME.radii.sm,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    paddingHorizontal: 12,
+    height: 40,
     color: THEME.colors.textPrimary,
     fontSize: 13,
-    height: 36,
+    marginBottom: 8,
   },
-  selectorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-    gap: 8,
+  segmentGroup: {
+    marginBottom: 8,
   },
-  selectorLabel: {
-    fontSize: 11,
-    color: THEME.colors.textSecondary,
+  fieldLabel: {
+    fontSize: 10,
     fontWeight: '700',
-    width: 38,
+    color: THEME.colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
   },
-  durationChips: {
+  segmentRow: {
     flexDirection: 'row',
-    flex: 1,
     gap: 6,
   },
-  chip: {
-    backgroundColor: '#1B1E26',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: THEME.radii.sm,
-    borderWidth: 1,
-    borderColor: THEME.colors.border,
-  },
-  chipActive: {
-    backgroundColor: 'rgba(229, 169, 60, 0.15)',
-    borderColor: THEME.colors.accent,
-  },
-  chipText: {
-    fontSize: 11,
-    color: THEME.colors.textSecondary,
-    fontWeight: '700',
-  },
-  chipTextActive: {
-    color: THEME.colors.accent,
-  },
-  categoryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 8,
-    gap: 8,
-  },
-  categoryChips: {
-    flexDirection: 'row',
+  segmentBtn: {
     flex: 1,
-    gap: 6,
-    flexWrap: 'wrap',
-  },
-  catChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1B1E26',
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: THEME.radii.sm,
-    borderWidth: 1,
-    borderColor: THEME.colors.border,
-    gap: 4,
-  },
-  catChipActive: {
-    backgroundColor: 'rgba(229, 169, 60, 0.15)',
-    borderColor: THEME.colors.accent,
-  },
-  catChipText: {
-    fontSize: 11,
-    color: THEME.colors.textSecondary,
-    fontWeight: '700',
-  },
-  catChipTextActive: {
-    color: THEME.colors.accent,
-  },
-  addBtn: {
-    backgroundColor: THEME.colors.accent,
-    width: 34,
-    height: 34,
-    borderRadius: THEME.radii.md,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 7,
+    backgroundColor: '#1B1E26',
+    borderRadius: THEME.radii.sm,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+  },
+  segmentBtnActive: {
+    backgroundColor: 'rgba(229, 169, 60, 0.15)',
+    borderColor: THEME.colors.accent,
+  },
+  segmentBtnText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: THEME.colors.textSecondary,
+  },
+  segmentBtnTextActive: {
+    color: THEME.colors.accent,
+    fontWeight: '700',
+  },
+  catSegmentBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    paddingVertical: 7,
+    paddingHorizontal: 4,
+    backgroundColor: '#1B1E26',
+    borderRadius: THEME.radii.sm,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+  },
+  catSegmentBtnActive: {
+    backgroundColor: 'rgba(229, 169, 60, 0.15)',
+    borderColor: THEME.colors.accent,
+  },
+  catSegmentText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: THEME.colors.textSecondary,
+  },
+  catSegmentTextActive: {
+    color: THEME.colors.accent,
+    fontWeight: '700',
+  },
+  submitBtn: {
+    backgroundColor: THEME.colors.accent,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 38,
+    borderRadius: THEME.radii.sm,
+    gap: 6,
+    marginTop: 2,
+  },
+  submitBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#000000',
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
   },
   lombardiBanner: {
     flexDirection: 'row',

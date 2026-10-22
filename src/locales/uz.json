@@ -165,7 +165,16 @@
     "hourlyValue": "Sizning Soatlik Qiymatingiz",
     "delegationRule": "Agar biror ishni soatiga ${rate} dan arzonga boshqalarga topshira olsangiz, uni aslo o'zingiz qilmang. Delegatsiya qiling!",
     "lombardiTime": "Lombardi Time (+15 daqiqa oldin)",
-    "lombardiDesc": "Agar 15 daqiqa oldin kelmagan bo'lsangiz, demak kechikdingiz"
+    "lombardiDesc": "Agar 15 daqiqa oldin kelmagan bo'lsangiz, demak kechikdingiz",
+    "durationLabel": "Davomiylik",
+    "categoryLabel": "Faoliyat toifasi",
+    "catFocus": "Fokus",
+    "catMeeting": "Uchrashuv",
+    "catAdmin": "Admin",
+    "catRest": "Dam",
+    "minutesShort": "daq",
+    "loggedBadge": "qayd",
+    "addEntry": "Vaqtni qayd etish"
   },
   "balance": {
     "title": "Hayot va Sifat Balansi",
