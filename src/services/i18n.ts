@@ -1,8 +1,9 @@
 /**
  * Lightweight Type-Safe Localization Engine
- * Supports uz, ru, and en with fallback and hot-switching
+ * Supports uz, ru, and en with fallback, defaultValue, and reactive hook
  */
 
+import { useState, useEffect } from 'react';
 import uz from '../locales/uz.json' with { type: 'json' };
 import ru from '../locales/ru.json' with { type: 'json' };
 import en from '../locales/en.json' with { type: 'json' };
@@ -35,43 +36,85 @@ export function getAvailableLanguages(): SupportedLanguage[] {
 
 export function subscribeLanguageChange(callback: (lang: SupportedLanguage) => void): () => void {
   listeners.add(callback);
-  return () => listeners.delete(callback);
+  return () => {
+    listeners.delete(callback);
+  };
 }
 
 /**
- * Translate a dot-delimited key with optional variable interpolation
- * e.g. t('focus.timeRemaining', { time: '01:24:18' })
+ * React Hook for reactive translations
+ * Automatically causes component to re-render when language changes
  */
-export function t(key: string, params?: Record<string, string | number>): string {
+export function useTranslation() {
+  const [lang, setLang] = useState<SupportedLanguage>(getLanguage());
+
+  useEffect(() => {
+    const unsubscribe = subscribeLanguageChange((newLang) => {
+      setLang(newLang);
+    });
+    return unsubscribe;
+  }, []);
+
+  return {
+    t: (key: string, params?: Record<string, any>) => t(key, params),
+    language: lang,
+    setLanguage,
+  };
+}
+
+/**
+ * Translate a dot-delimited key with optional variable interpolation and defaultValue fallback
+ * e.g. t('focus.timeRemaining', { time: '01:24:18' })
+ * e.g. t('focus.subtitle', { defaultValue: 'Executive OS' })
+ */
+export function t(key: string, params?: Record<string, any>): string {
   const dict = dictionaries[currentLanguage] || dictionaries.uz;
   const parts = key.split('.');
   let current: any = dict;
+  let found = true;
 
   for (const part of parts) {
     if (current && typeof current === 'object' && part in current) {
       current = current[part];
     } else {
-      // Fallback to English
-      let fallback: any = dictionaries.en;
-      for (const fPart of parts) {
-        if (fallback && typeof fallback === 'object' && fPart in fallback) {
-          fallback = fallback[fPart];
-        } else {
-          return key;
-        }
-      }
-      current = fallback;
+      found = false;
       break;
     }
   }
 
+  // If not found in current language, try English fallback
+  if (!found || typeof current !== 'string') {
+    let fallback: any = dictionaries.en;
+    let fallbackFound = true;
+    for (const fPart of parts) {
+      if (fallback && typeof fallback === 'object' && fPart in fallback) {
+        fallback = fallback[fPart];
+      } else {
+        fallbackFound = false;
+        break;
+      }
+    }
+    if (fallbackFound && typeof fallback === 'string') {
+      current = fallback;
+    } else if (params && typeof params.defaultValue === 'string') {
+      current = params.defaultValue;
+    } else {
+      return key;
+    }
+  }
+
   if (typeof current !== 'string') {
-    return key;
+    if (params && typeof params.defaultValue === 'string') {
+      current = params.defaultValue;
+    } else {
+      return key;
+    }
   }
 
   if (params) {
     let result = current;
     for (const [pKey, pVal] of Object.entries(params)) {
+      if (pKey === 'defaultValue') continue;
       result = result.replace(new RegExp(`\\{${pKey}\\}`, 'g'), String(pVal));
     }
     return result;

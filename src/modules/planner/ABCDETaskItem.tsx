@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { Task, PriorityType } from '../../store/plannerStore.ts';
 
@@ -22,6 +22,7 @@ export const ABCDETaskItem: React.FC<ABCDETaskItemProps> = ({
   onAddSubtask,
   onToggleSubtask,
 }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [newSubtask, setNewSubtask] = useState('');
 

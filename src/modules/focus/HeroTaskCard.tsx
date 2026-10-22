@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { Badge } from '../../components/common/Badge.tsx';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 
@@ -16,6 +16,7 @@ export const HeroTaskCard: React.FC<HeroTaskCardProps> = ({
   onSelectTask,
   onCompleteTask,
 }) => {
+  const { t } = useTranslation();
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>

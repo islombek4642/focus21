@@ -6,6 +6,7 @@ import { THEME } from './src/constants/theme.ts';
 import { RootNavigator } from './src/navigation/RootNavigator.tsx';
 import { SettingsModal } from './src/components/SettingsModal.tsx';
 import { VectorIcon } from './src/components/common/VectorIcon.tsx';
+import { useTranslation } from './src/services/i18n.ts';
 
 const navTheme = {
   ...DarkTheme,
@@ -21,7 +22,7 @@ const navTheme = {
 
 export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [, setLangTick] = useState(0);
+  const { language } = useTranslation();
 
   return (
     <SafeAreaView style={styles.root}>
@@ -39,13 +40,12 @@ export default function App() {
       </View>
 
       <NavigationContainer theme={navTheme}>
-        <RootNavigator />
+        <RootNavigator key={language} />
       </NavigationContainer>
 
       <SettingsModal
         visible={settingsOpen}
         onClose={() => setSettingsOpen(false)}
-        onLanguageChanged={() => setLangTick((prev) => prev + 1)}
       />
     </SafeAreaView>
   );

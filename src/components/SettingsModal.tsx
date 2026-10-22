@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Modal, TouchableOpacity, Alert, TextInput, ScrollView } from 'react-native';
 import { THEME } from '../constants/theme.ts';
-import { t, setLanguage, getLanguage, SupportedLanguage } from '../services/i18n.ts';
+import { useTranslation, SupportedLanguage } from '../services/i18n.ts';
+import { useSettingsStore } from '../store/settingsStore.ts';
 import { VectorIcon } from './common/VectorIcon.tsx';
 import { ExecutiveButton } from './common/ExecutiveButton.tsx';
 import { exportAllData, importAllData } from '../services/backup.ts';
@@ -17,7 +18,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
   onLanguageChanged,
 }) => {
-  const [currentLang, setCurrentLang] = useState<SupportedLanguage>(getLanguage() as SupportedLanguage);
+  const { t, language, setLanguage } = useTranslation();
   const [importText, setImportText] = useState('');
   const [showImportBox, setShowImportBox] = useState(false);
   const [backupCopied, setBackupCopied] = useState(false);
@@ -30,7 +31,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
   const handleSelectLang = (code: SupportedLanguage) => {
     setLanguage(code);
-    setCurrentLang(code);
+    useSettingsStore.getState().setLanguage(code);
     if (onLanguageChanged) {
       onLanguageChanged(code);
     }
@@ -89,7 +90,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   key={l.code}
                   style={[
                     styles.langRow,
-                    currentLang === l.code && styles.langRowActive,
+                    language === l.code && styles.langRowActive,
                   ]}
                   onPress={() => handleSelectLang(l.code)}
                   activeOpacity={0.7}
@@ -98,14 +99,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     <Text
                       style={[
                         styles.langLabel,
-                        currentLang === l.code && styles.langLabelActive,
+                        language === l.code && styles.langLabelActive,
                       ]}
                     >
                       {l.label}
                     </Text>
                     <Text style={styles.langSub}>{l.sub}</Text>
                   </View>
-                  {currentLang === l.code && (
+                  {language === l.code && (
                     <VectorIcon name="check" size={16} color={THEME.colors.accent} />
                   )}
                 </TouchableOpacity>

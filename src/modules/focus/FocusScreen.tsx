@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ExecutiveButton } from '../../components/common/ExecutiveButton.tsx';
 import { TimerRing } from './TimerRing.tsx';
@@ -12,6 +12,7 @@ import { usePlannerStore } from '../../store/plannerStore.ts';
 import { useFocusStore } from '../../store/focusStore.ts';
 
 export const FocusScreen: React.FC = () => {
+  const { t } = useTranslation();
   const {
     isRunning,
     formattedTime,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 
 export interface SayingNoJournalProps {
@@ -10,6 +10,7 @@ export interface SayingNoJournalProps {
 }
 
 export const SayingNoJournal: React.FC<SayingNoJournalProps> = ({ entries, onAddEntry }) => {
+  const { t } = useTranslation();
   const [requestText, setRequestText] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 

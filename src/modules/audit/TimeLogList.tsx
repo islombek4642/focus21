@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { TimeLogEntry, TimeLogCategory } from '../../store/auditStore.ts';
 
@@ -12,6 +12,7 @@ export interface TimeLogListProps {
 }
 
 export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDeleteLog }) => {
+  const { t } = useTranslation();
   const [activity, setActivity] = useState('');
   const [duration, setDuration] = useState<number>(30);
   const [category, setCategory] = useState<TimeLogCategory>('focus');

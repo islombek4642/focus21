@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 
 export interface ParetoSummaryProps {
@@ -15,6 +15,7 @@ export const ParetoSummary: React.FC<ParetoSummaryProps> = ({
   paretoCount,
   paretoCompletedCount,
 }) => {
+  const { t } = useTranslation();
   if (totalTasks === 0) return null;
 
   const completionPercent =

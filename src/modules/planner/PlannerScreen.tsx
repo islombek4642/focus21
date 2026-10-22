@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ABCDETaskItem } from './ABCDETaskItem.tsx';
 import { ParetoSummary } from './ParetoSummary.tsx';
@@ -10,6 +10,7 @@ import { EveningRitualModal } from './EveningRitualModal.tsx';
 import { usePlannerStore, PriorityType, Task } from '../../store/plannerStore.ts';
 
 export const PlannerScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [plannerState, setPlannerState] = useState(() => usePlannerStore.getState());
   const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
   const [newTaskTitle, setNewTaskTitle] = useState('');

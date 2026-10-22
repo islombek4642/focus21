@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { WheelOfLifeRadar } from './WheelOfLifeRadar.tsx';
 import { FamilyTimeTracker } from './FamilyTimeTracker.tsx';
 import { SayingNoJournal } from './SayingNoJournal.tsx';
 import { useBalanceStore } from '../../store/balanceStore.ts';
 
 export const BalanceScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [balanceState, setBalanceState] = useState(() => useBalanceStore.getState());
 
   useEffect(() => {

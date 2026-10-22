@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { Goal, GoalSphere } from '../../store/goalsStore.ts';
 
@@ -24,6 +24,7 @@ export const SphereCard: React.FC<SphereCardProps> = ({
   onToggleGoal,
   onDeleteGoal,
 }) => {
+  const { t } = useTranslation();
   const [isAdding, setIsAdding] = useState(false);
   const [newTitle, setNewTitle] = useState('');
 

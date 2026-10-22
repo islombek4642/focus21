@@ -71,4 +71,48 @@ describe('Localization (i18n) Engine', () => {
       '01:24:18 remaining'
     );
   });
+
+  it('must return defaultValue when key does not exist in dictionaries', () => {
+    assert.strictEqual(
+      t('non.existent.key', { defaultValue: 'Executive Default' }),
+      'Executive Default'
+    );
+    assert.strictEqual(
+      t('non.existent.keyWithParam', { defaultValue: 'Hello {name}', name: 'Brian' }),
+      'Hello Brian'
+    );
+  });
+
+  it('must contain all active UI keys in uz, ru, and en dictionaries', () => {
+    const requiredKeys = [
+      'focus.subtitle',
+      'focus.reset',
+      'focus.singleHandlingTag',
+      'common.paretoBadge',
+      'focus.noTaskTitle',
+      'focus.noTaskSubtitle',
+      'focus.idleStatus',
+      'focus.chunksLabel',
+      'focus.runningStatus',
+      'focus.singleHandlingRule',
+      'focus.markComplete',
+      'focus.switchTask',
+      'goals.goldenQuestionsBannerTitle',
+      'planner.paretoTag',
+      'audit.hourlyRateTitle',
+      'balance.wheelTitle',
+    ];
+
+    for (const key of requiredKeys) {
+      for (const lang of ['uz', 'ru', 'en'] as const) {
+        setLanguage(lang);
+        const translated = t(key);
+        assert.notStrictEqual(
+          translated,
+          key,
+          `Key "${key}" must have a real translation in "${lang}"`
+        );
+      }
+    }
+  });
 });

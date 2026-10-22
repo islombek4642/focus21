@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { HourlyRateCalculator } from './HourlyRateCalculator.tsx';
 import { TRAFInbox } from './TRAFInbox.tsx';
 import { TimeLogList } from './TimeLogList.tsx';
 import { useAuditStore, TRAFCategory, TimeLogCategory } from '../../store/auditStore.ts';
 
 export const AuditScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [auditState, setAuditState] = useState(() => useAuditStore.getState());
 
   useEffect(() => {

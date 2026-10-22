@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ExecutiveButton } from '../../components/common/ExecutiveButton.tsx';
 import { useGoalsStore, GoldenQuestions } from '../../store/goalsStore.ts';
@@ -15,6 +15,7 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
   visible,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const [answers, setAnswers] = useState<GoldenQuestions>({
     q1Lottery: '',
     q2SixMonths: '',

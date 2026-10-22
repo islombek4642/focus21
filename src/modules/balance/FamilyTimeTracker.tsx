@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 
 export interface FamilyTimeTrackerProps {
@@ -13,6 +13,7 @@ export const FamilyTimeTracker: React.FC<FamilyTimeTrackerProps> = ({
   minutesToday,
   onAddMinutes,
 }) => {
+  const { t } = useTranslation();
   const targetMinutes = 90; // 90 min daily family block
   const percent = Math.min(100, Math.round((minutesToday / targetMinutes) * 100));
 

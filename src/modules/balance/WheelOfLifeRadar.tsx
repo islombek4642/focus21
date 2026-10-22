@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { PillarScores } from '../../store/balanceStore.ts';
 
@@ -16,6 +16,7 @@ export const WheelOfLifeRadar: React.FC<WheelOfLifeRadarProps> = ({
   averageScore,
   onUpdateScore,
 }) => {
+  const { t } = useTranslation();
   const pillars: { key: string; label: string; icon: string }[] = [
     { key: 'family', label: 'Family', icon: 'heart' },
     { key: 'career', label: 'Career', icon: 'briefcase' },

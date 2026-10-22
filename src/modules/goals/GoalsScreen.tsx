@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { ScreenContainer } from '../../components/common/ScreenContainer.tsx';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { SphereCard } from './SphereCard.tsx';
 import { GoldenQuestionsModal } from './GoldenQuestionsModal.tsx';
@@ -10,6 +10,7 @@ import { KRACard } from './KRACard.tsx';
 import { useGoalsStore, GoalSphere } from '../../store/goalsStore.ts';
 
 export const GoalsScreen: React.FC = () => {
+  const { t } = useTranslation();
   const [goalsState, setGoalsState] = useState(() => useGoalsStore.getState());
   const [modalVisible, setModalVisible] = useState(false);
 

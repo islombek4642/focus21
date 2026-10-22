@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
-import { t } from '../../services/i18n.ts';
+import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ExecutiveButton } from '../../components/common/ExecutiveButton.tsx';
 import { usePlannerStore } from '../../store/plannerStore.ts';
@@ -15,6 +15,7 @@ export const EveningRitualModal: React.FC<EveningRitualModalProps> = ({
   visible,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const [a1Title, setA1Title] = useState('');
   const [a2Title, setA2Title] = useState('');
   const [a3Title, setA3Title] = useState('');

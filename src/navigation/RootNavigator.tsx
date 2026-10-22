@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { THEME } from '../constants/theme.ts';
 import { ROUTES } from '../constants/routes.ts';
-import { t } from '../services/i18n.ts';
+import { useTranslation } from '../services/i18n.ts';
 import { VectorIcon } from '../components/common/VectorIcon.tsx';
 import { getTabIconName } from './navConfig.ts';
 
@@ -16,6 +16,7 @@ import { BalanceScreen } from '../modules/balance/BalanceScreen.tsx';
 const Tab = createBottomTabNavigator();
 
 export const RootNavigator: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Tab.Navigator
       initialRouteName={ROUTES.FOCUS}
