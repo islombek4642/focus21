@@ -8,6 +8,7 @@ import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ExecutiveButton } from '../../components/common/ExecutiveButton.tsx';
 import { TimerRing } from './TimerRing.tsx';
 import { HeroTaskCard } from './HeroTaskCard.tsx';
+import { DailyPrincipleCard } from '../../components/common/DailyPrincipleCard.tsx';
 import { SelectA1TaskModal } from './SelectA1TaskModal.tsx';
 import { useFocusTimer } from './useFocusTimer.ts';
 import { usePlannerStore } from '../../store/plannerStore.ts';
@@ -119,6 +120,9 @@ export const FocusScreen: React.FC = () => {
         onSelectTask={() => setSelectModalVisible(true)}
         onCompleteTask={activeTask ? handleCompleteTask : undefined}
       />
+
+      {/* Daily Brian Tracy Principle Card */}
+      <DailyPrincipleCard />
 
       {/* Select or Create [A-1] Task Modal */}
       <SelectA1TaskModal

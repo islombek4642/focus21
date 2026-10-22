@@ -34,4 +34,15 @@ describe('Design Tokens & Constants System', () => {
     assert.strictEqual(BRIAN_TRACY_PRINCIPLES[0].id, 1);
     assert.strictEqual(BRIAN_TRACY_PRINCIPLES[20].id, 21);
   });
+
+  it('must compute valid daily principle for any given date within 1 to 21 range', async () => {
+    const { getDailyPrinciple } = await import('../src/constants/principles.ts');
+    const p1 = getDailyPrinciple(new Date('2026-01-01'));
+    assert.ok(p1);
+    assert.ok(p1.id >= 1 && p1.id <= 21);
+
+    const p2 = getDailyPrinciple(new Date('2026-12-31'));
+    assert.ok(p2);
+    assert.ok(p2.id >= 1 && p2.id <= 21);
+  });
 });

@@ -32,3 +32,11 @@ export const BRIAN_TRACY_PRINCIPLES: PrincipleMetadata[] = [
   { id: 20, key: 'sayingNo', tab: 'Balance', icon: 'slash' },
   { id: 21, key: 'balance', tab: 'Balance', icon: 'activity' },
 ];
+
+export function getDailyPrinciple(date: Date = new Date()): PrincipleMetadata {
+  const startOfYear = new Date(date.getFullYear(), 0, 1);
+  const diffMs = date.getTime() - startOfYear.getTime();
+  const dayOfYear = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const normalizedIndex = Math.abs(dayOfYear) % BRIAN_TRACY_PRINCIPLES.length;
+  return BRIAN_TRACY_PRINCIPLES[normalizedIndex];
+}
