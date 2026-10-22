@@ -76,4 +76,18 @@ describe('Focus Module Logic & Timer Calculations', () => {
     assert.strictEqual(state.secondsRemaining, 5400);
     assert.strictEqual(state.startedAtTimestamp, null);
   });
+
+  it('must assign and clear [A-1] Hero task in focusStore', () => {
+    const store = useFocusStore.getState();
+    assert.strictEqual(store.a1Task, null);
+
+    store.setA1Task({ id: 'task-101', title: 'Complete Executive Strategy Pitch' });
+    assert.deepStrictEqual(useFocusStore.getState().a1Task, {
+      id: 'task-101',
+      title: 'Complete Executive Strategy Pitch',
+    });
+
+    store.setA1Task(null);
+    assert.strictEqual(useFocusStore.getState().a1Task, null);
+  });
 });

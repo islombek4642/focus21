@@ -7,6 +7,7 @@ import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ExecutiveButton } from '../../components/common/ExecutiveButton.tsx';
 import { TimerRing } from './TimerRing.tsx';
 import { HeroTaskCard } from './HeroTaskCard.tsx';
+import { SelectA1TaskModal } from './SelectA1TaskModal.tsx';
 import { useFocusTimer } from './useFocusTimer.ts';
 import { usePlannerStore } from '../../store/plannerStore.ts';
 import { useFocusStore } from '../../store/focusStore.ts';
@@ -23,6 +24,7 @@ export const FocusScreen: React.FC = () => {
   } = useFocusTimer();
 
   const [activeTask, setActiveTask] = useState<{ id: string; title: string } | null>(null);
+  const [selectModalVisible, setSelectModalVisible] = useState(false);
 
   // Sync active task from planner or focusStore
   useEffect(() => {
@@ -113,7 +115,18 @@ export const FocusScreen: React.FC = () => {
       {/* [A-1] Single Handling Hero Card */}
       <HeroTaskCard
         task={activeTask}
+        onSelectTask={() => setSelectModalVisible(true)}
         onCompleteTask={activeTask ? handleCompleteTask : undefined}
+      />
+
+      {/* Select or Create [A-1] Task Modal */}
+      <SelectA1TaskModal
+        visible={selectModalVisible}
+        onClose={() => setSelectModalVisible(false)}
+        onSelectTask={(task) => {
+          setActiveTask(task);
+        }}
+        activeTaskId={activeTask?.id}
       />
     </ScreenContainer>
   );

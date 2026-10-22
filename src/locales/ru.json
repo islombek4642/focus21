@@ -59,7 +59,14 @@
     "switchTask": "Сменить A-1",
     "otherPriorities": "СЕГОДНЯШНИЕ ПРИОРИТЕТЫ",
     "chunkCompletedTitle": "Чанк завершен!",
-    "chunkCompletedBody": "Сделайте перерыв на 10-15 минут и поощрите себя."
+    "chunkCompletedBody": "Сделайте перерыв на 10-15 минут и поощрите себя.",
+    "selectA1ModalTitle": "Выбор задачи A-1",
+    "createNewA1": "СОЗДАТЬ НОВУЮ ЗАДАЧУ A-1",
+    "createNewA1Placeholder": "Введите главную задачу на сегодня...",
+    "addAndSelect": "Выбрать",
+    "plannerTasksTitle": "ДОСТУПНЫЕ ЗАДАЧИ ИЗ ПЛАНА",
+    "noPlannerTasks": "В планировщике пока нет задач. Создайте новую задачу A-1 выше.",
+    "activeBadge": "АКТИВНАЯ [A-1]"
   },
   "goals": {
     "title": "Письменные Цели",

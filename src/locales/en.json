@@ -59,7 +59,14 @@
     "switchTask": "Change A-1",
     "otherPriorities": "TODAY'S PRIORITIES",
     "chunkCompletedTitle": "Chunk Completed!",
-    "chunkCompletedBody": "Take a 10-15 minute break and reward yourself."
+    "chunkCompletedBody": "Take a 10-15 minute break and reward yourself.",
+    "selectA1ModalTitle": "Select [A-1] Task",
+    "createNewA1": "CREATE NEW [A-1] TASK",
+    "createNewA1Placeholder": "Enter top priority task for today...",
+    "addAndSelect": "Set as A-1",
+    "plannerTasksTitle": "AVAILABLE TASKS FROM PLANNER",
+    "noPlannerTasks": "No tasks in planner yet. Create your top priority task above.",
+    "activeBadge": "ACTIVE [A-1]"
   },
   "goals": {
     "title": "Written Goals",

@@ -59,7 +59,14 @@
     "switchTask": "A-1 ni o'zgartirish",
     "otherPriorities": "BUGUNGI USTUVORLIKLAR",
     "chunkCompletedTitle": "Chunk yakunlandi!",
-    "chunkCompletedBody": "10-15 daqiqa tanaffus qiling va o'zingizni rag'batlantiring."
+    "chunkCompletedBody": "10-15 daqiqa tanaffus qiling va o'zingizni rag'batlantiring.",
+    "selectA1ModalTitle": "A-1 Vazifani Tanlash",
+    "createNewA1": "YANGI A-1 VAZIFA YARATISH",
+    "createNewA1Placeholder": "Bugungi eng muhim vazifani kiriting...",
+    "addAndSelect": "Belgilash",
+    "plannerTasksTitle": "REJADAGI MAVJUD VAZIFALAR",
+    "noPlannerTasks": "Rejalashtiruvchida hali vazifalar yo'q. Yuqorida yangi A-1 vazifa yozing.",
+    "activeBadge": "FAOL [A-1]"
   },
   "goals": {
     "title": "Yozma Maqsadlar",

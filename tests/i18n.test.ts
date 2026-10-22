@@ -101,6 +101,13 @@ describe('Localization (i18n) Engine', () => {
       'planner.paretoTag',
       'audit.hourlyRateTitle',
       'balance.wheelTitle',
+      'focus.selectA1ModalTitle',
+      'focus.createNewA1',
+      'focus.createNewA1Placeholder',
+      'focus.addAndSelect',
+      'focus.plannerTasksTitle',
+      'focus.noPlannerTasks',
+      'focus.activeBadge',
     ];
 
     for (const key of requiredKeys) {
