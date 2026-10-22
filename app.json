@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "Focus 21",
+    "slug": "focus-21-executive",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0D0E11",
+    "splash": {
+      "backgroundColor": "#0D0E11",
+      "resizeMode": "contain"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0D0E11"
+      },
+      "package": "com.focus21.executive",
+      "permissions": ["VIBRATE"]
+    },
+    "plugins": []
+  }
+}
