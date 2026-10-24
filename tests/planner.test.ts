@@ -114,4 +114,32 @@ describe('Planner Module Logic & ABCDE Prioritization', () => {
     planner.toggleTask('task-2');
     assert.strictEqual(useFocusStore.getState().a1Task, null);
   });
+
+  it('must automatically re-index tasks sequentially when A-1 is deleted (A2 becomes A1, A3 becomes A2)', () => {
+    const planner = usePlannerStore.getState();
+
+    planner.addTask({ id: 'task-a1', title: 'Task 1', priority: 'A', priorityRank: 1 });
+    planner.addTask({ id: 'task-a2', title: 'Task 2', priority: 'A', priorityRank: 2 });
+    planner.addTask({ id: 'task-a3', title: 'Task 3', priority: 'A', priorityRank: 3 });
+    planner.addTask({ id: 'task-b1', title: 'Task B1', priority: 'B', priorityRank: 1 });
+    planner.addTask({ id: 'task-b2', title: 'Task B2', priority: 'B', priorityRank: 2 });
+
+    // Delete A1 -> A2 becomes A1, A3 becomes A2
+    planner.deleteTask('task-a1');
+
+    const tasks = usePlannerStore.getState().tasks;
+    const aTasks = tasks.filter((t) => t.priority === 'A');
+    assert.strictEqual(aTasks.length, 2);
+    assert.strictEqual(aTasks[0].id, 'task-a2');
+    assert.strictEqual(aTasks[0].priorityRank, 1); // Promoted to A-1!
+    assert.strictEqual(aTasks[1].id, 'task-a3');
+    assert.strictEqual(aTasks[1].priorityRank, 2); // Promoted to A-2!
+
+    // Delete B1 -> B2 becomes B1
+    planner.deleteTask('task-b1');
+    const bTasks = usePlannerStore.getState().tasks.filter((t) => t.priority === 'B');
+    assert.strictEqual(bTasks.length, 1);
+    assert.strictEqual(bTasks[0].id, 'task-b2');
+    assert.strictEqual(bTasks[0].priorityRank, 1); // Promoted to B-1!
+  });
 });

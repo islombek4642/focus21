@@ -54,9 +54,13 @@ class PlannerStore {
         this.notify();
       },
       updateTask: (id, updates) => {
-        this.state.tasks = this.state.tasks
-          .map((t) => (t.id === id ? { ...t, ...updates } : t))
-          .sort(this.sortTasks);
+        let updated = this.state.tasks.map((t) => (t.id === id ? { ...t, ...updates } : t));
+        if (updates.priority) {
+          updated = this.reindexTasks(updated);
+        } else {
+          updated.sort(this.sortTasks);
+        }
+        this.state.tasks = updated;
         const currentA1 = useFocusStore.getState().a1Task;
         if (currentA1 && currentA1.id === id && updates.title) {
           useFocusStore.getState().setA1Task({ id, title: updates.title });
@@ -64,15 +68,17 @@ class PlannerStore {
         this.notify();
       },
       deleteTask: (id) => {
-        this.state.tasks = this.state.tasks.filter((t) => t.id !== id);
+        const remaining = this.state.tasks.filter((t) => t.id !== id);
+        // Automatically re-index remaining tasks so A-2 becomes A-1, A-3 becomes A-2, etc.
+        this.state.tasks = this.reindexTasks(remaining);
         // Synchronize with Focus module: if the deleted task was active in Focus, advance or clear
         const currentA1 = useFocusStore.getState().a1Task;
         if (currentA1 && currentA1.id === id) {
-          const remainingTasks = this.state.tasks.filter((t) => !t.completed);
+          const remainingActive = this.state.tasks.filter((t) => !t.completed);
           const nextA1 =
-            remainingTasks.find((t) => t.priority === 'A' && t.priorityRank === 1) ||
-            remainingTasks.find((t) => t.priority === 'A') ||
-            remainingTasks[0] ||
+            remainingActive.find((t) => t.priority === 'A' && t.priorityRank === 1) ||
+            remainingActive.find((t) => t.priority === 'A') ||
+            remainingActive[0] ||
             null;
           useFocusStore.getState().setA1Task(nextA1 ? { id: nextA1.id, title: nextA1.title } : null);
         }
@@ -129,6 +135,25 @@ class PlannerStore {
     const rankA = a.priorityRank || 999;
     const rankB = b.priorityRank || 999;
     return rankA - rankB;
+  }
+
+  private reindexTasks(tasks: Task[]): Task[] {
+    const sorted = [...tasks].sort(this.sortTasks);
+    const counters: Record<PriorityType, number> = {
+      A: 1,
+      B: 1,
+      C: 1,
+      D: 1,
+      E: 1,
+    };
+
+    return sorted.map((t) => {
+      const nextRank = counters[t.priority]++;
+      if (t.priorityRank !== nextRank) {
+        return { ...t, priorityRank: nextRank };
+      }
+      return t;
+    });
   }
 
   getState = () => this.state;
