@@ -102,8 +102,19 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
       <View style={styles.backdrop}>
+        <TouchableOpacity
+          style={styles.backdropDismiss}
+          activeOpacity={1}
+          onPress={onClose}
+        />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.keyboardAvoid}
@@ -226,17 +237,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
   },
+  backdropDismiss: {
+    flex: 1,
+    width: '100%',
+  },
   keyboardAvoid: {
     width: '100%',
+    justifyContent: 'flex-end',
   },
   card: {
     backgroundColor: THEME.colors.card,
-    borderTopLeftRadius: THEME.radii.lg,
-    borderTopRightRadius: THEME.radii.lg,
-    borderWidth: 1,
+    borderTopLeftRadius: THEME.radii.lg + 4,
+    borderTopRightRadius: THEME.radii.lg + 4,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
     borderColor: THEME.colors.border,
     maxHeight: '85%',
-    paddingBottom: 24,
+    paddingBottom: Platform.OS === 'ios' ? 36 : 28,
   },
   header: {
     flexDirection: 'row',

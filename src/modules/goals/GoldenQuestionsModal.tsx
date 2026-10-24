@@ -52,14 +52,25 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      statusBarTranslucent
+      onRequestClose={onClose}
+    >
       <View style={styles.backdrop}>
+        <TouchableOpacity
+          style={styles.backdropDismiss}
+          activeOpacity={1}
+          onPress={onClose}
+        />
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           style={styles.keyboardAvoid}
         >
           <View style={styles.modalCard}>
-          <View style={styles.header}>
+            <View style={styles.header}>
             <View style={styles.headerTitleRow}>
               <VectorIcon name="help-circle" size={18} color={THEME.colors.accent} />
               <Text style={styles.headerTitle}>
@@ -165,16 +176,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
   },
+  backdropDismiss: {
+    flex: 1,
+    width: '100%',
+  },
   keyboardAvoid: {
     width: '100%',
+    justifyContent: 'flex-end',
   },
   modalCard: {
     backgroundColor: THEME.colors.card,
     borderTopLeftRadius: THEME.radii.lg + 4,
     borderTopRightRadius: THEME.radii.lg + 4,
     borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 0,
     borderColor: THEME.colors.border,
-    padding: THEME.spacing.md,
+    paddingHorizontal: THEME.spacing.md,
+    paddingTop: THEME.spacing.md,
+    paddingBottom: Platform.OS === 'ios' ? 36 : 28,
     maxHeight: '85%',
   },
   header: {
