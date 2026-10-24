@@ -113,3 +113,23 @@ class PlannerStore {
 }
 
 export const usePlannerStore = new PlannerStore();
+
+/**
+ * Automatically calculates recommended priority for next task (Smart Auto-Cascade)
+ * Rules based on Brian Tracy's ABCDE & Pareto principles:
+ * - Up to 3 active [A] tasks (the vital 20% / frogs)
+ * - Up to 4 active [B] tasks (should do)
+ * - Beyond that, default to [C] (nice to do)
+ */
+export function getRecommendedPriority(tasks: Task[]): PriorityType {
+  const activeTasks = tasks.filter((t) => !t.completed);
+  const aCount = activeTasks.filter((t) => t.priority === 'A').length;
+  if (aCount < 3) {
+    return 'A';
+  }
+  const bCount = activeTasks.filter((t) => t.priority === 'B').length;
+  if (bCount < 4) {
+    return 'B';
+  }
+  return 'C';
+}

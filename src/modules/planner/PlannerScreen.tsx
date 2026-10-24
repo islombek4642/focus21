@@ -8,14 +8,19 @@ import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 import { ABCDETaskItem } from './ABCDETaskItem.tsx';
 import { ParetoSummary } from './ParetoSummary.tsx';
 import { EveningRitualModal } from './EveningRitualModal.tsx';
-import { usePlannerStore, PriorityType, Task } from '../../store/plannerStore.ts';
+import {
+  usePlannerStore,
+  PriorityType,
+  Task,
+  getRecommendedPriority,
+} from '../../store/plannerStore.ts';
 
 export const PlannerScreen: React.FC = () => {
   const { t } = useTranslation();
   const [plannerState, setPlannerState] = useState(() => usePlannerStore.getState());
   const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newPriority, setNewPriority] = useState<PriorityType>('A');
+  const [manualPriority, setManualPriority] = useState<PriorityType | null>(null);
   const [ritualModalVisible, setRitualModalVisible] = useState(false);
 
   useEffect(() => {
@@ -27,17 +32,38 @@ export const PlannerScreen: React.FC = () => {
     };
   }, []);
 
+  const priorityOptions: PriorityType[] = ['A', 'B', 'C', 'D', 'E'];
+  const recommendedPriority = getRecommendedPriority(plannerState.tasks);
+  const currentPriority: PriorityType = manualPriority ?? recommendedPriority;
+
+  const handleCycleNewPriority = () => {
+    const currentIndex = priorityOptions.indexOf(currentPriority);
+    const nextPriority = priorityOptions[(currentIndex + 1) % priorityOptions.length];
+    setManualPriority(nextPriority);
+  };
+
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
-      const existingInPriority = plannerState.tasks.filter((t) => t.priority === newPriority);
+      const existingInPriority = plannerState.tasks.filter((t) => t.priority === currentPriority);
       usePlannerStore.getState().addTask({
         id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         title: newTaskTitle.trim(),
-        priority: newPriority,
+        priority: currentPriority,
         priorityRank: existingInPriority.length + 1,
       });
       setNewTaskTitle('');
+      setManualPriority(null);
     }
+  };
+
+  const handleChangeTaskPriority = (taskId: string, nextPriority: PriorityType) => {
+    const existingInPriority = plannerState.tasks.filter(
+      (t) => t.priority === nextPriority && t.id !== taskId
+    );
+    usePlannerStore.getState().updateTask(taskId, {
+      priority: nextPriority,
+      priorityRank: existingInPriority.length + 1,
+    });
   };
 
   const handleToggle = (id: string) => {
@@ -77,8 +103,6 @@ export const PlannerScreen: React.FC = () => {
     return task.priority === selectedFilter;
   });
 
-  const priorityOptions: PriorityType[] = ['A', 'B', 'C', 'D', 'E'];
-
   return (
     <ScreenContainer>
       {/* Top Header */}
@@ -111,13 +135,10 @@ export const PlannerScreen: React.FC = () => {
         <View style={styles.addInputRow}>
           <TouchableOpacity
             style={styles.prioritySelector}
-            onPress={() => {
-              const nextIndex = (priorityOptions.indexOf(newPriority) + 1) % priorityOptions.length;
-              setNewPriority(priorityOptions[nextIndex]);
-            }}
+            onPress={handleCycleNewPriority}
             activeOpacity={0.7}
           >
-            <Text style={styles.prioritySelectorText}>[{newPriority}]</Text>
+            <Text style={styles.prioritySelectorText}>[{currentPriority}]</Text>
           </TouchableOpacity>
 
           <TextInput
@@ -136,6 +157,18 @@ export const PlannerScreen: React.FC = () => {
           >
             <VectorIcon name="plus" size={16} color={THEME.colors.canvas} />
           </TouchableOpacity>
+        </View>
+
+        {/* Priority Education & Auto-Cascade Hint */}
+        <View style={styles.priorityHintRow}>
+          <Text style={styles.priorityHintText} numberOfLines={1}>
+            {t(`planner.priority${currentPriority}`)}
+          </Text>
+          {manualPriority === null && (
+            <Text style={styles.autoBadgeText}>
+              {t('planner.autoRecommended', { defaultValue: 'AUTO CASCADE' })}
+            </Text>
+          )}
         </View>
       </View>
 
@@ -183,6 +216,7 @@ export const PlannerScreen: React.FC = () => {
               isPareto={paretoIds.has(task.id)}
               onToggle={handleToggle}
               onDelete={handleDelete}
+              onChangePriority={handleChangeTaskPriority}
               onAddSubtask={handleAddSubtask}
               onToggleSubtask={handleToggleSubtask}
             />
@@ -275,6 +309,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 8,
+  },
+  priorityHintRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 6,
+    paddingHorizontal: 4,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.05)',
+    marginTop: 4,
+  },
+  priorityHintText: {
+    fontSize: 10,
+    color: THEME.colors.textSecondary,
+    fontWeight: '500',
+    flex: 1,
+  },
+  autoBadgeText: {
+    fontSize: 9,
+    color: THEME.colors.accent,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginLeft: 6,
   },
   filterRow: {
     flexDirection: 'row',

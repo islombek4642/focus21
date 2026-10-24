@@ -144,6 +144,7 @@
     "priorityC": "C - Nice to Do (No Consequences)",
     "priorityD": "D - Delegate (Delegate to Others)",
     "priorityE": "E - Eliminate (Discard completely)",
+    "autoRecommended": "AUTO CASCADE",
     "salamiSlicing": "Salami Slicing (Subtasks)",
     "addSubtask": "Add Slice"
   },

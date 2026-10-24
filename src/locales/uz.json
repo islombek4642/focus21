@@ -144,6 +144,7 @@
     "priorityC": "C - Yaxshi bo'lardi (Oqibati yo'q)",
     "priorityD": "D - Delegatsiya (Boshqalarga topshirish)",
     "priorityE": "E - Bekor qilish (Butunlay olib tashlash)",
+    "autoRecommended": "AVTOMATIK TAQSIMOT",
     "salamiSlicing": "Salami Slicing (Kichik qismlar)",
     "addSubtask": "Qism qo'shish"
   },

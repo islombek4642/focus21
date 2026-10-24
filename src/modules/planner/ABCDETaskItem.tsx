@@ -10,6 +10,7 @@ export interface ABCDETaskItemProps {
   isPareto?: boolean;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onChangePriority?: (id: string, nextPriority: PriorityType) => void;
   onAddSubtask?: (taskId: string, subtaskTitle: string) => void;
   onToggleSubtask?: (taskId: string, subtaskId: string) => void;
 }
@@ -19,12 +20,23 @@ export const ABCDETaskItem: React.FC<ABCDETaskItemProps> = ({
   isPareto = false,
   onToggle,
   onDelete,
+  onChangePriority,
   onAddSubtask,
   onToggleSubtask,
 }) => {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [newSubtask, setNewSubtask] = useState('');
+
+  const priorityCycle: PriorityType[] = ['A', 'B', 'C', 'D', 'E'];
+
+  const handleCyclePriority = () => {
+    if (onChangePriority) {
+      const currentIndex = priorityCycle.indexOf(task.priority);
+      const nextPriority = priorityCycle[(currentIndex + 1) % priorityCycle.length];
+      onChangePriority(task.id, nextPriority);
+    }
+  };
 
   const getPriorityStyle = (priority: PriorityType) => {
     switch (priority) {
@@ -96,10 +108,14 @@ export const ABCDETaskItem: React.FC<ABCDETaskItemProps> = ({
           />
         </TouchableOpacity>
 
-        {/* Priority Badge */}
-        <View style={[styles.priorityBadge, { backgroundColor: pStyle.bg, borderColor: pStyle.border }]}>
+        {/* Priority Badge (Tappable to cycle A -> B -> C -> D -> E) */}
+        <TouchableOpacity
+          style={[styles.priorityBadge, { backgroundColor: pStyle.bg, borderColor: pStyle.border }]}
+          onPress={handleCyclePriority}
+          activeOpacity={0.7}
+        >
           <Text style={[styles.priorityText, { color: pStyle.text }]}>{rankLabel}</Text>
-        </View>
+        </TouchableOpacity>
 
         {/* Title & Info */}
         <View style={styles.titleContainer}>

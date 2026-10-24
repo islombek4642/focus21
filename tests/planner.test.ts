@@ -1,6 +1,6 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert';
-import { usePlannerStore } from '../src/store/plannerStore.ts';
+import { usePlannerStore, getRecommendedPriority } from '../src/store/plannerStore.ts';
 
 describe('Planner Module Logic & ABCDE Prioritization', () => {
   beforeEach(() => {
@@ -64,5 +64,34 @@ describe('Planner Module Logic & ABCDE Prioritization', () => {
     assert.strictEqual(usePlannerStore.getState().tasks[0].completed, false);
     store.toggleTask('t1');
     assert.strictEqual(usePlannerStore.getState().tasks[0].completed, true);
+  });
+
+  it('must recommend priorities following Smart Auto-Cascade (A up to 3, then B up to 4, then C)', () => {
+    const store = usePlannerStore.getState();
+
+    // 0 tasks -> A
+    assert.strictEqual(getRecommendedPriority(store.tasks), 'A');
+
+    // 1 task -> A
+    store.addTask({ id: '1', title: 'A1', priority: 'A' });
+    assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'A');
+
+    // 2 tasks -> A
+    store.addTask({ id: '2', title: 'A2', priority: 'A' });
+    assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'A');
+
+    // 3 tasks (A maxed at 3) -> B
+    store.addTask({ id: '3', title: 'A3', priority: 'A' });
+    assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'B');
+
+    // B tasks added up to 4 -> B
+    store.addTask({ id: '4', title: 'B1', priority: 'B' });
+    store.addTask({ id: '5', title: 'B2', priority: 'B' });
+    store.addTask({ id: '6', title: 'B3', priority: 'B' });
+    assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'B');
+
+    // 4th B task added -> C
+    store.addTask({ id: '7', title: 'B4', priority: 'B' });
+    assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'C');
   });
 });
