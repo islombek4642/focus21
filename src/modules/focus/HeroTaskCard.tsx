@@ -6,15 +6,23 @@ import { Badge } from '../../components/common/Badge.tsx';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
 
 export interface HeroTaskCardProps {
-  task: { id: string; title: string } | null;
+  task: {
+    id: string;
+    title: string;
+    priority?: string;
+    priorityRank?: number;
+    subtasks?: { id: string; title: string; completed: boolean }[];
+  } | null;
   onSelectTask?: () => void;
   onCompleteTask?: () => void;
+  onToggleSubtask?: (taskId: string, subtaskId: string) => void;
 }
 
 export const HeroTaskCard: React.FC<HeroTaskCardProps> = ({
   task,
   onSelectTask,
   onCompleteTask,
+  onToggleSubtask,
 }) => {
   const { t } = useTranslation();
   return (
@@ -35,12 +43,55 @@ export const HeroTaskCard: React.FC<HeroTaskCardProps> = ({
 
       {task ? (
         <View style={styles.content}>
-          <Text style={styles.taskTitle}>[A-1] {task.title}</Text>
+          <Text style={styles.taskTitle}>
+            {task.priority ? `[${task.priority}${task.priorityRank ? `-${task.priorityRank}` : ''}] ` : '[A-1] '}
+            {task.title}
+          </Text>
           <Text style={styles.taskRule}>
             {t('focus.singleHandlingRule', {
               defaultValue: 'Work on this single task with 100% dedication until completed.',
             })}
           </Text>
+
+          {/* Salami Slicing Subtasks Section */}
+          {task.subtasks && task.subtasks.length > 0 && (
+            <View style={styles.salamiBox}>
+              <View style={styles.salamiHeaderRow}>
+                <View style={styles.salamiTitleGroup}>
+                  <VectorIcon name="layers" size={12} color={THEME.colors.accent} />
+                  <Text style={styles.salamiHeaderText}>
+                    {t('planner.salamiTitle', { defaultValue: 'SALAMI SLICING (PRINCIPLE #18)' })}
+                  </Text>
+                </View>
+                <Text style={styles.salamiCountText}>
+                  {task.subtasks.filter((s) => s.completed).length}/{task.subtasks.length}
+                </Text>
+              </View>
+
+              {task.subtasks.map((sub) => (
+                <TouchableOpacity
+                  key={sub.id}
+                  style={styles.subtaskItem}
+                  onPress={() => onToggleSubtask && onToggleSubtask(task.id, sub.id)}
+                  activeOpacity={0.7}
+                >
+                  <VectorIcon
+                    name={sub.completed ? 'check-square' : 'square'}
+                    size={14}
+                    color={sub.completed ? THEME.colors.success : THEME.colors.textTertiary}
+                  />
+                  <Text
+                    style={[
+                      styles.subtaskTitle,
+                      sub.completed && styles.subtaskCompleted,
+                    ]}
+                  >
+                    {sub.title}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
           <View style={styles.actionRow}>
             {onCompleteTask && (
@@ -164,6 +215,51 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     marginLeft: 4,
+  },
+  salamiBox: {
+    marginTop: THEME.spacing.sm,
+    backgroundColor: THEME.colors.cardDark,
+    borderRadius: THEME.radii.md,
+    borderWidth: 1,
+    borderColor: THEME.colors.border,
+    padding: 10,
+  },
+  salamiHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  salamiTitleGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  salamiHeaderText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: THEME.colors.accent,
+    marginLeft: 6,
+    letterSpacing: 0.5,
+  },
+  salamiCountText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: THEME.colors.textSecondary,
+  },
+  subtaskItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  subtaskTitle: {
+    fontSize: 13,
+    color: THEME.colors.textPrimary,
+    marginLeft: 8,
+    flex: 1,
+  },
+  subtaskCompleted: {
+    color: THEME.colors.textTertiary,
+    textDecorationLine: 'line-through',
   },
   emptyContainer: {
     alignItems: 'center',

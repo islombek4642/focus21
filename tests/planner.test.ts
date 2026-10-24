@@ -1,10 +1,12 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert';
 import { usePlannerStore, getRecommendedPriority } from '../src/store/plannerStore.ts';
+import { useFocusStore } from '../src/store/focusStore.ts';
 
 describe('Planner Module Logic & ABCDE Prioritization', () => {
   beforeEach(() => {
     usePlannerStore.getState().reset();
+    useFocusStore.getState().reset();
   });
 
   it('must correctly prioritize tasks in ABCDE order (A before B, A1 before A2)', () => {
@@ -93,5 +95,23 @@ describe('Planner Module Logic & ABCDE Prioritization', () => {
     // 4th B task added -> C
     store.addTask({ id: '7', title: 'B4', priority: 'B' });
     assert.strictEqual(getRecommendedPriority(usePlannerStore.getState().tasks), 'C');
+  });
+
+  it('must synchronize with focusStore when a selected A1 task is deleted or completed', () => {
+    const planner = usePlannerStore.getState();
+
+    planner.addTask({ id: 'task-1', title: 'Big Frog A1', priority: 'A', priorityRank: 1 });
+    planner.addTask({ id: 'task-2', title: 'Secondary Frog A2', priority: 'A', priorityRank: 2 });
+
+    useFocusStore.getState().setA1Task({ id: 'task-1', title: 'Big Frog A1' });
+    assert.strictEqual(useFocusStore.getState().a1Task?.id, 'task-1');
+
+    // Delete task-1 -> focusStore should auto-advance to task-2
+    planner.deleteTask('task-1');
+    assert.strictEqual(useFocusStore.getState().a1Task?.id, 'task-2');
+
+    // Complete task-2 -> focusStore should clear to null
+    planner.toggleTask('task-2');
+    assert.strictEqual(useFocusStore.getState().a1Task, null);
   });
 });

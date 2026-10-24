@@ -3,6 +3,8 @@
  * Manages ABCDE prioritization, Salami Slicing, and Pareto 80/20 calculation
  */
 
+import { useFocusStore } from './focusStore.ts';
+
 export interface Subtask {
   id: string;
   title: string;
@@ -55,16 +57,45 @@ class PlannerStore {
         this.state.tasks = this.state.tasks
           .map((t) => (t.id === id ? { ...t, ...updates } : t))
           .sort(this.sortTasks);
+        const currentA1 = useFocusStore.getState().a1Task;
+        if (currentA1 && currentA1.id === id && updates.title) {
+          useFocusStore.getState().setA1Task({ id, title: updates.title });
+        }
         this.notify();
       },
       deleteTask: (id) => {
         this.state.tasks = this.state.tasks.filter((t) => t.id !== id);
+        // Synchronize with Focus module: if the deleted task was active in Focus, advance or clear
+        const currentA1 = useFocusStore.getState().a1Task;
+        if (currentA1 && currentA1.id === id) {
+          const remainingTasks = this.state.tasks.filter((t) => !t.completed);
+          const nextA1 =
+            remainingTasks.find((t) => t.priority === 'A' && t.priorityRank === 1) ||
+            remainingTasks.find((t) => t.priority === 'A') ||
+            remainingTasks[0] ||
+            null;
+          useFocusStore.getState().setA1Task(nextA1 ? { id: nextA1.id, title: nextA1.title } : null);
+        }
         this.notify();
       },
       toggleTask: (id) => {
         this.state.tasks = this.state.tasks.map((t) =>
           t.id === id ? { ...t, completed: !t.completed } : t
         );
+        // If completed task was active in Focus, advance to next active task or clear
+        const task = this.state.tasks.find((t) => t.id === id);
+        if (task && task.completed) {
+          const currentA1 = useFocusStore.getState().a1Task;
+          if (currentA1 && currentA1.id === id) {
+            const remainingTasks = this.state.tasks.filter((t) => !t.completed);
+            const nextA1 =
+              remainingTasks.find((t) => t.priority === 'A' && t.priorityRank === 1) ||
+              remainingTasks.find((t) => t.priority === 'A') ||
+              remainingTasks[0] ||
+              null;
+            useFocusStore.getState().setA1Task(nextA1 ? { id: nextA1.id, title: nextA1.title } : null);
+          }
+        }
         this.notify();
       },
       getParetoTasks: () => {

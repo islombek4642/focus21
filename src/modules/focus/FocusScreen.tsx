@@ -26,30 +26,47 @@ export const FocusScreen: React.FC = () => {
     reset,
   } = useFocusTimer();
 
-  const [activeTask, setActiveTask] = useState<{ id: string; title: string } | null>(null);
+  const [focusState, setFocusState] = useState(() => useFocusStore.getState());
+  const [plannerTasks, setPlannerTasks] = useState(() => usePlannerStore.getState().tasks);
   const [selectModalVisible, setSelectModalVisible] = useState(false);
 
-  // Sync active task from planner or focusStore
   useEffect(() => {
-    const focusState = useFocusStore.getState();
-    if (focusState.a1Task) {
-      setActiveTask(focusState.a1Task);
-      return;
-    }
+    const unsubFocus = useFocusStore.subscribe(() => {
+      setFocusState({ ...useFocusStore.getState() });
+    });
+    const unsubPlanner = usePlannerStore.subscribe(() => {
+      setPlannerTasks([...usePlannerStore.getState().tasks]);
+    });
+    return () => {
+      unsubFocus();
+      unsubPlanner();
+    };
+  }, []);
 
-    // Auto-select first A1 task or first task from plannerStore
-    const plannerTasks = usePlannerStore.getState().tasks;
-    const a1 = plannerTasks.find((task) => !task.completed && task.priority === 'A' && task.priorityRank === 1);
-    const anyA = plannerTasks.find((task) => !task.completed && task.priority === 'A');
-    const firstTask = plannerTasks.find((task) => !task.completed);
-
-    const candidate = a1 || anyA || firstTask;
-    if (candidate) {
-      const taskObj = { id: candidate.id, title: candidate.title };
-      setActiveTask(taskObj);
-      useFocusStore.getState().setA1Task(taskObj);
+  // Sync initial candidate if focusStore.a1Task is empty on launch
+  useEffect(() => {
+    if (!useFocusStore.getState().a1Task) {
+      const tasks = usePlannerStore.getState().tasks;
+      const candidate =
+        tasks.find((task) => !task.completed && task.priority === 'A' && task.priorityRank === 1) ||
+        tasks.find((task) => !task.completed && task.priority === 'A') ||
+        tasks.find((task) => !task.completed) ||
+        null;
+      if (candidate) {
+        useFocusStore.getState().setA1Task({ id: candidate.id, title: candidate.title });
+      }
     }
   }, []);
+
+  // Live active task matching focusStore.a1Task with plannerTasks (including subtasks)
+  const activeTask = React.useMemo(() => {
+    const a1 = focusState.a1Task;
+    if (a1) {
+      const match = plannerTasks.find((t) => t.id === a1.id && !t.completed);
+      if (match) return match;
+    }
+    return null;
+  }, [focusState.a1Task, plannerTasks]);
 
   const handleToggleTimer = () => {
     if (isRunning) {
@@ -62,20 +79,16 @@ export const FocusScreen: React.FC = () => {
   const handleCompleteTask = () => {
     if (activeTask) {
       usePlannerStore.getState().toggleTask(activeTask.id);
-      const remainingTasks = usePlannerStore
-        .getState()
-        .tasks.filter((t) => !t.completed && t.id !== activeTask.id);
-      const nextA1 =
-        remainingTasks.find((t) => t.priority === 'A') || remainingTasks[0] || null;
-
-      if (nextA1) {
-        useFocusStore.getState().setA1Task({ id: nextA1.id, title: nextA1.title });
-        setActiveTask(nextA1);
-      } else {
-        useFocusStore.getState().setA1Task(null);
-        setActiveTask(null);
-      }
     }
+  };
+
+  const handleToggleSubtask = (taskId: string, subtaskId: string) => {
+    const task = plannerTasks.find((t) => t.id === taskId);
+    if (!task || !task.subtasks) return;
+    const nextSubtasks = task.subtasks.map((s) =>
+      s.id === subtaskId ? { ...s, completed: !s.completed } : s
+    );
+    usePlannerStore.getState().updateTask(taskId, { subtasks: nextSubtasks });
   };
 
   return (
@@ -132,6 +145,7 @@ export const FocusScreen: React.FC = () => {
         task={activeTask}
         onSelectTask={() => setSelectModalVisible(true)}
         onCompleteTask={activeTask ? handleCompleteTask : undefined}
+        onToggleSubtask={handleToggleSubtask}
       />
 
       {/* Daily Brian Tracy Principle Card */}
@@ -142,7 +156,7 @@ export const FocusScreen: React.FC = () => {
         visible={selectModalVisible}
         onClose={() => setSelectModalVisible(false)}
         onSelectTask={(task) => {
-          setActiveTask(task);
+          useFocusStore.getState().setA1Task(task);
         }}
         activeTaskId={activeTask?.id}
       />
