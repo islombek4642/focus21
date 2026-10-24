@@ -45,7 +45,7 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
               {t('audit.timeLogTitle', { defaultValue: 'Minute-by-Minute Time Log' })}
             </Text>
             <Text style={styles.subtitle} numberOfLines={1}>
-              {t('audit.timeLogSubtitle', { defaultValue: 'Principle #6: Track Your Time' })}
+              {t('audit.timeLogSubtitle', { defaultValue: 'Principle #7: Track Your Time' })}
             </Text>
           </View>
         </View>
@@ -132,12 +132,12 @@ export const TimeLogList: React.FC<TimeLogListProps> = ({ logs, onAddLog, onDele
         </TouchableOpacity>
       </View>
 
-      {/* Lombardi Time Banner (Principle #15) */}
+      {/* Lombardi Time Banner (Principle #18) */}
       <View style={styles.lombardiBanner}>
         <VectorIcon name="bell" size={12} color={THEME.colors.accent} />
         <Text style={styles.lombardiText}>
           {t('audit.lombardiNotice', {
-            defaultValue: 'Lombardi Time (Principle #15): 15 minutes early is on time. Plan buffer.',
+            defaultValue: 'Lombardi Time (Principle #18): 15 minutes early is on time. Plan buffer.',
           })}
         </Text>
       </View>
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#1E222A',
+    backgroundColor: THEME.colors.cardElevated,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: THEME.radii.full,
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     color: THEME.colors.accent,
   },
   addSection: {
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   textInput: {
-    backgroundColor: '#171A21',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.sm,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 7,
-    backgroundColor: '#1B1E26',
+    backgroundColor: THEME.colors.priorityD,
     borderRadius: THEME.radii.sm,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingVertical: 7,
     paddingHorizontal: 4,
-    backgroundColor: '#1B1E26',
+    backgroundColor: THEME.colors.priorityD,
     borderRadius: THEME.radii.sm,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -324,14 +324,14 @@ const styles = StyleSheet.create({
   submitBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#000000',
+    color: THEME.colors.canvas,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   lombardiBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#171A21',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.sm,
     padding: 6,
     marginBottom: 8,
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255, 255, 255, 0.04)',
   },
   durationBadge: {
-    backgroundColor: '#1A2333',
+    backgroundColor: THEME.colors.priorityC,
     paddingHorizontal: 5,
     paddingVertical: 2,
     borderRadius: THEME.radii.sm,
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   durationText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#60A5FA',
+    color: THEME.colors.badgeBlue,
   },
   logActivity: {
     flex: 1,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     color: THEME.colors.textPrimary,
   },
   catTag: {
-    backgroundColor: '#16181D',
+    backgroundColor: THEME.colors.card,
     paddingHorizontal: 5,
     paddingVertical: 2,
     borderRadius: THEME.radii.sm,

@@ -40,7 +40,7 @@ export const SphereCard: React.FC<SphereCardProps> = ({
     sphere === 'business'
       ? THEME.colors.accent
       : sphere === 'family'
-      ? '#60A5FA'
+      ? THEME.colors.badgeBlue
       : THEME.colors.success;
 
   return (
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: THEME.radii.md,
-    backgroundColor: '#1E222A',
+    backgroundColor: THEME.colors.cardElevated,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1B1E26',
+    backgroundColor: THEME.colors.priorityD,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,

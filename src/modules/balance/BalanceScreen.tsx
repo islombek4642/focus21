@@ -41,7 +41,7 @@ export const BalanceScreen: React.FC = () => {
       {/* Top Header */}
       <ExecutiveHeader
         title={t('tabs.balance', { defaultValue: 'EXECUTIVE BALANCE' })}
-        subtitle={t('balance.principleNote', { defaultValue: 'Principles #10, #19 & #20' })}
+        subtitle={t('balance.principleNote', { defaultValue: 'Principles #20 & #21' })}
       />
 
       {/* Wheel of Life Radar */}

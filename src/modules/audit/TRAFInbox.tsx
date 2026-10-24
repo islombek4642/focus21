@@ -30,15 +30,15 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
           label: t('audit.trafToss', { defaultValue: 'Toss' }),
           icon: 'trash-2',
           color: THEME.colors.danger,
-          bg: '#2A1010',
+          bg: THEME.colors.priorityA,
           desc: t('audit.trafTossDesc', { defaultValue: 'Darhol tashlash' }),
         };
       case 'refer':
         return {
           label: t('audit.trafRefer', { defaultValue: 'Refer' }),
           icon: 'share-2',
-          color: '#F97316',
-          bg: '#2B1A0D',
+          color: THEME.colors.warning,
+          bg: THEME.colors.priorityB,
           desc: t('audit.trafReferDesc', { defaultValue: 'Boshqalarga topshirish' }),
         };
       case 'action':
@@ -46,7 +46,7 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
           label: t('audit.trafAction', { defaultValue: 'Action' }),
           icon: 'check-circle',
           color: THEME.colors.accent,
-          bg: '#261F10',
+          bg: THEME.colors.accentMuted,
           desc: t('audit.trafActionDesc', { defaultValue: '[A] rejaga kiritish' }),
         };
       case 'file':
@@ -54,8 +54,8 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
         return {
           label: t('audit.trafFile', { defaultValue: 'File' }),
           icon: 'folder',
-          color: '#60A5FA',
-          bg: '#14223A',
+          color: THEME.colors.badgeBlue,
+          bg: THEME.colors.priorityC,
           desc: t('audit.trafFileDesc', { defaultValue: 'Arxivga saqlash' }),
         };
     }
@@ -71,7 +71,7 @@ export const TRAFInbox: React.FC<TRAFInboxProps> = ({ items, onAddItem, onDelete
               {t('audit.trafTitle', { defaultValue: 'TRAF Triage System' })}
             </Text>
             <Text style={styles.subtitle}>
-              {t('audit.trafSubtitle', { defaultValue: 'Principle #11: Toss, Refer, Action, File' })}
+              {t('audit.trafSubtitle', { defaultValue: 'Principle #14: Toss, Refer, Action, File' })}
             </Text>
           </View>
         </View>
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   inputContainer: {
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   triageBtnText: {
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: '700',
     letterSpacing: 0.3,
   },

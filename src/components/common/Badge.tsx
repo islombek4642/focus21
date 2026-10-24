@@ -24,38 +24,38 @@ export const Badge: React.FC<BadgeProps> = ({
     switch (variant) {
       case 'pareto':
         return {
-          bg: '#2A200B',
+          bg: THEME.colors.accentMuted,
           border: THEME.colors.accent,
           text: THEME.colors.accent,
         };
       case 'priority':
         return {
-          bg: '#1A2333',
-          border: '#3B82F6',
-          text: '#60A5FA',
+          bg: THEME.colors.priorityC,
+          border: THEME.colors.info,
+          text: THEME.colors.badgeBlue,
         };
       case 'success':
         return {
-          bg: '#0D281E',
+          bg: THEME.colors.successTint,
           border: THEME.colors.success,
           text: THEME.colors.success,
         };
       case 'warning':
         return {
-          bg: '#2E2208',
-          border: '#F59E0B',
-          text: '#F59E0B',
+          bg: THEME.colors.priorityB,
+          border: THEME.colors.warning,
+          text: THEME.colors.warningText,
         };
       case 'danger':
         return {
-          bg: '#331212',
+          bg: THEME.colors.priorityA,
           border: THEME.colors.danger,
           text: THEME.colors.danger,
         };
       case 'neutral':
       default:
         return {
-          bg: '#1C1F26',
+          bg: THEME.colors.cardElevated,
           border: THEME.colors.border,
           text: THEME.colors.textSecondary,
         };

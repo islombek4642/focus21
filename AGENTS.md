@@ -45,11 +45,11 @@ Har bir qatlam faqat o'z vazifasini bajaradi:
 
 ## 6. Anti-Slop Visual Quality Gate
 - [DESIGN.md](file:///d:/nomsiz%20loyiha/DESIGN.md) talablariga muvofiq, loyihada generik AI shablonlari bo'lmasligi kerak.
-- Faqat Auros Dark palitrasi (`#012624` Liquid Abyss, `#003734` Liquid Kelp, bioluminessent gradientlar va Matter tipografiyasi) qo'llaniladi.
+- Faqat Obsidian Executive palitrasi (`#0D0E11` Obsidian Matte, `#16181D` Charcoal Slate, `#E5A93C` Amber Gold aksent, `#10B981` Emerald Sage va System Sans-Serif tipografiyasi) qo'llaniladi.
 
 ---
 
 ## 7. No Emojis & Professional Icons Only (Emoji va Stikerlar Qat'iyan Taqiqlanadi)
 - Ilovada har qanday **emoji (smayliklar)** yoki stikerlardan foydalanish **qat'iyan man etiladi**.
 - Barcha vizual belgilar faqat maxsus professional vektorli ikonka kutubxonalari orqali amalga oshiriladi (masalan: `@expo/vector-icons`, `lucide-react-native`, `feather`, `material-community-icons`).
-- Ikonkalar monoxrom, yupqa (stroke-width: 1.5–2px) va Auros dizayn tizimi ranglariga mos bo'lishi shart.
+- Ikonkalar monoxrom, yupqa (stroke-width: 1.5–2px) va Obsidian Executive dizayn tizimi ranglariga mos bo'lishi shart (`#8F94A0` nofaol, `#E5A93C` yoki `#FFFFFF` faol).

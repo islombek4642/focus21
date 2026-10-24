@@ -47,6 +47,7 @@ export interface AuditState {
   getHourlyRate: () => number;
   reset: () => void;
   setTrafItems: (items: TRAFItem[]) => void;
+  setTimeLogs: (logs: TimeLogEntry[]) => void;
 }
 
 type Listener = () => void;
@@ -63,7 +64,7 @@ class AuditStore {
       hourlyRate: 50,
       addTrafItem: (title, category) => {
         const item: TRAFItem = {
-          id: `traf-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          id: `traf-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
           title,
           category,
           createdAt: Date.now(),
@@ -96,12 +97,12 @@ class AuditStore {
       },
       setAnnualTargetIncome: (amount) => {
         this.state.annualTargetIncome = amount;
-        this.state.hourlyRate = Math.round(amount / 2000);
+        this.state.hourlyRate = Math.round((amount / 2000) * 100) / 100;
         this.notify();
       },
       setTargetAnnualIncome: (amount) => {
         this.state.annualTargetIncome = amount;
-        this.state.hourlyRate = Math.round(amount / 2000);
+        this.state.hourlyRate = Math.round((amount / 2000) * 100) / 100;
         this.notify();
       },
       getHourlyRate: () => {
@@ -116,6 +117,10 @@ class AuditStore {
       },
       setTrafItems: (items) => {
         this.state.trafItems = items;
+        this.notify();
+      },
+      setTimeLogs: (logs) => {
+        this.state.timeLogs = logs;
         this.notify();
       },
     };

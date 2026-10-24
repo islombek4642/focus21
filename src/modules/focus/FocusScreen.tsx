@@ -20,6 +20,7 @@ export const FocusScreen: React.FC = () => {
     isRunning,
     formattedTime,
     completedChunksCount,
+    progress,
     start,
     pause,
     reset,
@@ -61,8 +62,19 @@ export const FocusScreen: React.FC = () => {
   const handleCompleteTask = () => {
     if (activeTask) {
       usePlannerStore.getState().toggleTask(activeTask.id);
-      useFocusStore.getState().setA1Task(null);
-      setActiveTask(null);
+      const remainingTasks = usePlannerStore
+        .getState()
+        .tasks.filter((t) => !t.completed && t.id !== activeTask.id);
+      const nextA1 =
+        remainingTasks.find((t) => t.priority === 'A') || remainingTasks[0] || null;
+
+      if (nextA1) {
+        useFocusStore.getState().setA1Task({ id: nextA1.id, title: nextA1.title });
+        setActiveTask(nextA1);
+      } else {
+        useFocusStore.getState().setA1Task(null);
+        setActiveTask(null);
+      }
     }
   };
 
@@ -87,6 +99,7 @@ export const FocusScreen: React.FC = () => {
         formattedTime={formattedTime}
         isRunning={isRunning}
         completedChunks={completedChunksCount}
+        progress={progress}
       />
 
       {/* Primary Action Buttons */}
@@ -160,7 +173,7 @@ const styles = StyleSheet.create({
   mantraBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     paddingHorizontal: 10,

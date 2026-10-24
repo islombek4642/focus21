@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
@@ -60,24 +70,28 @@ export const EveningRitualModal: React.FC<EveningRitualModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.backdrop}>
-        <View style={styles.card}>
-          <View style={styles.header}>
-            <View style={styles.headerLeft}>
-              <VectorIcon name="moon" size={18} color={THEME.colors.accent} />
-              <Text style={styles.headerTitle}>
-                {t('planner.eveningRitualTitle', { defaultValue: 'Evening Planning Ritual' })}
-              </Text>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardAvoid}
+        >
+          <View style={styles.card}>
+            <View style={styles.header}>
+              <View style={styles.headerLeft}>
+                <VectorIcon name="moon" size={18} color={THEME.colors.accent} />
+                <Text style={styles.headerTitle}>
+                  {t('planner.eveningRitualTitle', { defaultValue: 'Evening Planning Ritual' })}
+                </Text>
+              </View>
+              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+                <VectorIcon name="x" size={20} color={THEME.colors.textSecondary} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <VectorIcon name="x" size={20} color={THEME.colors.textSecondary} />
-            </TouchableOpacity>
-          </View>
 
-          <Text style={styles.principleQuote}>
-            {t('planner.eveningQuote', {
-              defaultValue: 'Principle #1: Always think on paper the night before so your subconscious works while you sleep.',
-            })}
-          </Text>
+            <Text style={styles.principleQuote}>
+              {t('planner.eveningQuote', {
+                defaultValue: 'Principle #3: Always think on paper the night before so your subconscious works while you sleep.',
+              })}
+            </Text>
 
           <ScrollView
             style={styles.scrollArea}
@@ -168,6 +182,7 @@ export const EveningRitualModal: React.FC<EveningRitualModalProps> = ({
             />
           </View>
         </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -178,6 +193,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
+  },
+  keyboardAvoid: {
+    width: '100%',
   },
   card: {
     backgroundColor: THEME.colors.card,
@@ -249,7 +267,7 @@ const styles = StyleSheet.create({
   taskInputBlock: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -257,7 +275,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   rankBadge: {
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     paddingHorizontal: 6,
@@ -266,8 +284,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   rankBadgeSecondary: {
-    backgroundColor: '#1A2333',
-    borderColor: '#3B82F6',
+    backgroundColor: THEME.colors.priorityC,
+    borderColor: THEME.colors.info,
   },
   rankBadgeText: {
     fontSize: 10,

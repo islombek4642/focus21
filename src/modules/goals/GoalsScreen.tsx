@@ -59,7 +59,7 @@ export const GoalsScreen: React.FC = () => {
       {/* Top Header */}
       <ExecutiveHeader
         title={t('tabs.goals', { defaultValue: 'GOALS & PURPOSE' })}
-        subtitle={t('goals.principleNote', { defaultValue: 'Principles #2, #4 & #14' })}
+        subtitle={t('goals.principleNote', { defaultValue: 'Principles #1, #12 & #19' })}
         badge={
           <TouchableOpacity
             style={styles.clarifierBtn}
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   clarifierBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     paddingHorizontal: 10,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   goldenBanner: {
-    backgroundColor: '#171A21',
+    backgroundColor: THEME.colors.card,
     borderRadius: THEME.radii.lg,
     borderWidth: 1,
     borderColor: 'rgba(229, 169, 60, 0.3)',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: THEME.radii.md,
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,

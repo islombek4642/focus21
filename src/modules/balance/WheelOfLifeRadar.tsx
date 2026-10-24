@@ -39,7 +39,7 @@ export const WheelOfLifeRadar: React.FC<WheelOfLifeRadarProps> = ({
           <VectorIcon name="compass" size={16} color={THEME.colors.accent} />
           <View style={styles.titles}>
             <Text style={styles.title}>
-              {t('balance.wheelTitle', { defaultValue: 'Wheel of Life (Principle #19)' })}
+              {t('balance.wheelTitle', { defaultValue: 'Wheel of Life (Principle #21)' })}
             </Text>
             <Text style={styles.subtitle}>
               {t('balance.wheelSubtitle', { defaultValue: 'Score your balance from 1 to 10 across 6 pillars' })}
@@ -61,7 +61,9 @@ export const WheelOfLifeRadar: React.FC<WheelOfLifeRadarProps> = ({
             <View key={p.key} style={styles.pillarCard}>
               <View style={styles.pillarTop}>
                 <VectorIcon name={p.icon} size={14} color={THEME.colors.accent} />
-                <Text style={styles.pillarLabel}>{p.label}</Text>
+                <Text style={styles.pillarLabel}>
+                  {t(`balance.pillar_${p.key}`, { defaultValue: p.label })}
+                </Text>
               </View>
 
               {/* Score Adjuster */}
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   scoreBadge: {
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     borderRadius: THEME.radii.md,
@@ -159,7 +161,7 @@ const styles = StyleSheet.create({
   pillarCard: {
     flex: 1,
     minWidth: '47%',
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -183,7 +185,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
   },
   adjustBtn: {
-    backgroundColor: '#1C1F26',
+    backgroundColor: THEME.colors.cardElevated,
     width: 24,
     height: 24,
     borderRadius: THEME.radii.sm,
@@ -197,7 +199,7 @@ const styles = StyleSheet.create({
   },
   barTrack: {
     height: 3,
-    backgroundColor: '#1E222A',
+    backgroundColor: THEME.colors.cardElevated,
     borderRadius: THEME.radii.full,
     overflow: 'hidden',
     marginTop: 4,

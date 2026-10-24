@@ -86,7 +86,7 @@ export const DailyPrincipleCard: React.FC = () => {
               <Text style={styles.moduleTagText}>{tabLabel}</Text>
             </View>
             <Text style={styles.moduleHelpText}>
-              Brian Tracy 21 Principles
+              {t('common.tracyPrinciples', { defaultValue: 'Brian Tracy 21 Principles' })}
             </Text>
           </View>
 
@@ -99,7 +99,7 @@ export const DailyPrincipleCard: React.FC = () => {
               <Text style={styles.navigateBtnText}>
                 {t('focus.openModule', { tab: tabLabel, defaultValue: `Open ${tabLabel}` })}
               </Text>
-              <VectorIcon name="arrow-right" size={14} color="#000000" />
+              <VectorIcon name="arrow-right" size={14} color={THEME.colors.canvas} />
             </TouchableOpacity>
           )}
         </View>
@@ -110,7 +110,7 @@ export const DailyPrincipleCard: React.FC = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#13161D',
+    backgroundColor: THEME.colors.card,
     borderRadius: THEME.radii.lg,
     borderWidth: 1,
     borderColor: 'rgba(229, 169, 60, 0.22)',
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     color: THEME.colors.accent,
   },
   summary: {
-    fontSize: 12.5,
+    fontSize: 12,
     color: THEME.colors.textSecondary,
     lineHeight: 18,
     fontStyle: 'italic',
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#191C24',
+    backgroundColor: THEME.colors.cardElevated,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: THEME.radii.sm,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   navigateBtnText: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#000000',
+    color: THEME.colors.canvas,
     letterSpacing: 0.3,
   },
 });

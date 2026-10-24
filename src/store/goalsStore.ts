@@ -38,6 +38,7 @@ export interface GoalsState {
   deleteKra: (id: string) => void;
   reset: () => void;
   setGoals: (goals: Goal[]) => void;
+  setKraList: (list: KRAItem[]) => void;
 }
 
 type Listener = () => void;
@@ -58,7 +59,7 @@ class GoalsStore {
       kraList: [],
       addGoal: (sphere, title) => {
         const newGoal: Goal = {
-          id: `goal-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+          id: `goal-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
           sphere,
           title,
           completed: false,
@@ -115,6 +116,10 @@ class GoalsStore {
       },
       setGoals: (goals) => {
         this.state.goals = goals;
+        this.notify();
+      },
+      setKraList: (list) => {
+        this.state.kraList = list;
         this.notify();
       },
     };

@@ -8,12 +8,14 @@ export interface TimerRingProps {
   formattedTime: string;
   isRunning: boolean;
   completedChunks: number;
+  progress?: number;
 }
 
 export const TimerRing: React.FC<TimerRingProps> = ({
   formattedTime,
   isRunning,
   completedChunks,
+  progress = 1,
 }) => {
   const { t } = useTranslation();
   return (
@@ -32,6 +34,16 @@ export const TimerRing: React.FC<TimerRingProps> = ({
           </View>
 
           <Text style={styles.timerDisplay}>{formattedTime}</Text>
+
+          {/* Dynamic Progress Indicator Track */}
+          <View style={styles.progressTrackContainer}>
+            <View
+              style={[
+                styles.progressBar,
+                { width: `${Math.min(100, Math.max(0, Math.round(progress * 100)))}%` },
+              ]}
+            />
+          </View>
 
           <View style={styles.footerRow}>
             <Text style={[styles.statusText, isRunning && styles.statusRunning]}>
@@ -80,10 +92,23 @@ const styles = StyleSheet.create({
     borderRadius: (RING_SIZE - 18) / 2,
     borderWidth: 1,
     borderColor: THEME.colors.border,
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: THEME.spacing.md,
+  },
+  progressTrackContainer: {
+    width: 120,
+    height: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: THEME.radii.full,
+    overflow: 'hidden',
+    marginVertical: THEME.spacing.xs,
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: THEME.colors.accent,
+    borderRadius: THEME.radii.full,
   },
   headerRow: {
     flexDirection: 'row',

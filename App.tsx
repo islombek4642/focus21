@@ -10,6 +10,7 @@ import { OnboardingModal } from './src/components/common/OnboardingModal.tsx';
 import { ExecutiveSplashScreen } from './src/components/common/ExecutiveSplashScreen.tsx';
 import { useTranslation } from './src/services/i18n.ts';
 import { useSettingsStore } from './src/store/settingsStore.ts';
+import { initPersistence } from './src/services/storage.ts';
 
 const navTheme = {
   ...DarkTheme,
@@ -32,13 +33,15 @@ export default function App() {
   const { language } = useTranslation();
 
   useEffect(() => {
-    const unsub = useSettingsStore.subscribe(() => {
+    const unsubPersistence = initPersistence();
+    const unsubSettings = useSettingsStore.subscribe(() => {
       const state = useSettingsStore.getState();
       setSettingsOpen(state.isSettingsOpen);
       setOnboardingOpen(!state.hasSeenOnboarding || state.isOnboardingOpen);
     });
     return () => {
-      unsub();
+      unsubPersistence();
+      unsubSettings();
     };
   }, []);
 

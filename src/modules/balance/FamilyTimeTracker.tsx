@@ -21,7 +21,7 @@ export const FamilyTimeTracker: React.FC<FamilyTimeTrackerProps> = ({
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <VectorIcon name="heart" size={16} color="#F43F5E" />
+          <VectorIcon name="heart" size={16} color={THEME.colors.badgeRose} />
           <View style={styles.titles}>
             <Text style={styles.title}>
               {t('balance.familyTitle', { defaultValue: 'Undivided Attention (Principle #20)' })}
@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   badge: {
-    backgroundColor: '#2A1018',
+    backgroundColor: THEME.colors.priorityE,
     borderWidth: 1,
-    borderColor: '#F43F5E',
+    borderColor: THEME.colors.badgeRose,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: THEME.radii.full,
@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
   badgeValue: {
     fontSize: 12,
     fontWeight: '800',
-    color: '#F43F5E',
+    color: THEME.colors.badgeRose,
   },
   progressBarTrack: {
     height: 4,
-    backgroundColor: '#16181D',
+    backgroundColor: THEME.colors.card,
     borderRadius: THEME.radii.full,
     overflow: 'hidden',
     marginTop: 6,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#F43F5E',
+    backgroundColor: THEME.colors.badgeRose,
     borderRadius: THEME.radii.full,
   },
   progressLabel: {
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#181A22',
+    backgroundColor: THEME.colors.cardElevated,
     borderWidth: 1,
     borderColor: THEME.colors.border,
     paddingVertical: 6,

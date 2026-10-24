@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, View, Text, Animated, Image } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
+import { useTranslation } from '../../services/i18n.ts';
 
 export interface ExecutiveSplashScreenProps {
   onFinish: () => void;
@@ -11,6 +12,7 @@ export const ExecutiveSplashScreen: React.FC<ExecutiveSplashScreenProps> = ({
   onFinish,
   durationMs = 2600,
 }) => {
+  const { t } = useTranslation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.92)).current;
   const exitFade = useRef(new Animated.Value(1)).current;
@@ -66,20 +68,26 @@ export const ExecutiveSplashScreen: React.FC<ExecutiveSplashScreenProps> = ({
         </View>
 
         {/* Title */}
-        <Text style={styles.brandTitle}>FOCUS 21</Text>
-        <Text style={styles.brandSubtitle}>EXECUTIVE OS</Text>
+        <Text style={styles.brandTitle}>
+          {t('common.appName', { defaultValue: 'FOCUS 21' })}
+        </Text>
+        <Text style={styles.brandSubtitle}>
+          {t('common.tagline', { defaultValue: 'EXECUTIVE OS' })}
+        </Text>
 
         <View style={styles.goldDivider} />
 
         {/* Tagline */}
         <Text style={styles.tagline}>
-          Brian Tracy 21 Principles
+          {t('common.tracyPrinciples', { defaultValue: 'Brian Tracy 21 Principles' })}
         </Text>
       </Animated.View>
 
       {/* Footer System Badge */}
       <Animated.View style={[styles.footer, { opacity: fadeAnim }]}>
-        <Text style={styles.footerText}>HIGH-PERFORMANCE TIME MANAGEMENT</Text>
+        <Text style={styles.footerText}>
+          {t('common.highPerformance', { defaultValue: 'HIGH-PERFORMANCE TIME MANAGEMENT' })}
+        </Text>
       </Animated.View>
     </Animated.View>
   );

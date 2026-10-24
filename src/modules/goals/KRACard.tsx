@@ -34,7 +34,7 @@ export const KRACard: React.FC<KRACardProps> = ({ kraList, onAddKra, onDeleteKra
               {t('goals.kraTitle', { defaultValue: 'Key Result Areas (KRAs)' })}
             </Text>
             <Text style={styles.subtitle}>
-              {t('goals.kraSubtitle', { defaultValue: 'Principle #14: "Why am I on the payroll?"' })}
+              {t('goals.kraSubtitle', { defaultValue: 'Principle #12: "Why am I on the payroll?"' })}
             </Text>
           </View>
         </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1B1E26',
+    backgroundColor: THEME.colors.priorityD,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     borderRadius: THEME.radii.full,
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     alignItems: 'center',

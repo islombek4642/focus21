@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
 import { VectorIcon } from '../../components/common/VectorIcon.tsx';
@@ -44,7 +54,11 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.backdrop}>
-        <View style={styles.modalCard}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardAvoid}
+        >
+          <View style={styles.modalCard}>
           <View style={styles.header}>
             <View style={styles.headerTitleRow}>
               <VectorIcon name="help-circle" size={18} color={THEME.colors.accent} />
@@ -59,7 +73,7 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
 
           <Text style={styles.quoteSubtitle}>
             {t('goals.goldenQuestionsQuote', {
-              defaultValue: 'Brian Tracy Principle #4: Instant Clarifiers for Ultimate Purpose',
+              defaultValue: 'Brian Tracy Principle #1: Instant Clarifiers for Ultimate Purpose',
             })}
           </Text>
 
@@ -88,7 +102,7 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
             {/* Q2: 6 Months to Live */}
             <View style={styles.questionBlock}>
               <View style={styles.questionLabelRow}>
-                <VectorIcon name="clock" size={14} color="#60A5FA" />
+                <VectorIcon name="clock" size={14} color={THEME.colors.badgeBlue} />
                 <Text style={styles.questionLabel}>
                   {t('goals.q2Label', { defaultValue: '2. What if you had only 6 months left to live?' })}
                 </Text>
@@ -139,6 +153,7 @@ export const GoldenQuestionsModal: React.FC<GoldenQuestionsModalProps> = ({
             />
           </View>
         </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -149,6 +164,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
+  },
+  keyboardAvoid: {
+    width: '100%',
   },
   modalCard: {
     backgroundColor: THEME.colors.card,
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textArea: {
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,

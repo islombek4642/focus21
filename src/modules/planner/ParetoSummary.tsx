@@ -27,7 +27,7 @@ export const ParetoSummary: React.FC<ParetoSummaryProps> = ({
         <View style={styles.tagGroup}>
           <VectorIcon name="pie-chart" size={14} color={THEME.colors.accent} />
           <Text style={styles.title}>
-            {t('planner.paretoBannerTitle', { defaultValue: 'PARETO 80/20 PRINCIPLE (#3)' })}
+            {t('planner.paretoBannerTitle', { defaultValue: 'PARETO 80/20 PRINCIPLE (#4)' })}
           </Text>
         </View>
         <Text style={styles.ratioText}>
@@ -58,7 +58,7 @@ export const ParetoSummary: React.FC<ParetoSummaryProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#181A22',
+    backgroundColor: THEME.colors.card,
     borderRadius: THEME.radii.lg,
     borderWidth: 1,
     borderColor: 'rgba(229, 169, 60, 0.25)',
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     height: 4,
-    backgroundColor: '#121418',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.full,
     overflow: 'hidden',
     marginTop: 6,

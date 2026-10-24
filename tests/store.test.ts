@@ -5,6 +5,7 @@ import { useFocusStore } from '../src/store/focusStore.ts';
 import { useGoalsStore } from '../src/store/goalsStore.ts';
 import { useAuditStore } from '../src/store/auditStore.ts';
 import { useBalanceStore } from '../src/store/balanceStore.ts';
+import { useSettingsStore } from '../src/store/settingsStore.ts';
 import { exportAllData, importAllData } from '../src/services/backup.ts';
 
 describe('Zustand Offline-First Stores & Backup', () => {
@@ -117,5 +118,24 @@ describe('Zustand Offline-First Stores & Backup', () => {
     assert.strictEqual(useSettingsStore.getState().isOnboardingOpen, true);
     store.setOnboardingOpen(false);
     assert.strictEqual(useSettingsStore.getState().isOnboardingOpen, false);
+  });
+
+  it('storage: must persist and hydrate state without errors', async () => {
+    const { persistAppState, hydrateAppState } = await import('../src/services/storage.ts');
+    usePlannerStore.getState().addTask({ id: 'task-persisted', title: 'Persisted Plan', priority: 'A', priorityRank: 1 });
+    useSettingsStore.getState().setHasSeenOnboarding(true);
+
+    await persistAppState();
+
+    // Clear planner
+    usePlannerStore.getState().reset();
+    assert.strictEqual(usePlannerStore.getState().tasks.length, 0);
+
+    // Hydrate back
+    const hydrated = await hydrateAppState();
+    assert.strictEqual(hydrated, true);
+    assert.strictEqual(usePlannerStore.getState().tasks.length, 1);
+    assert.strictEqual(usePlannerStore.getState().tasks[0].id, 'task-persisted');
+    assert.strictEqual(useSettingsStore.getState().hasSeenOnboarding, true);
   });
 });

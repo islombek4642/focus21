@@ -72,8 +72,13 @@ export function importAllData(jsonString: string): boolean {
       usePlannerStore.getState().setTasks(data.planner.tasks);
     }
 
-    if (data.goals && Array.isArray(data.goals.goals)) {
-      useGoalsStore.getState().setGoals(data.goals.goals);
+    if (data.goals) {
+      if (Array.isArray(data.goals.goals)) {
+        useGoalsStore.getState().setGoals(data.goals.goals);
+      }
+      if (Array.isArray(data.goals.kraList)) {
+        useGoalsStore.getState().setKraList(data.goals.kraList);
+      }
       if (data.goals.goldenQuestions) {
         for (const [k, v] of Object.entries(data.goals.goldenQuestions)) {
           useGoalsStore.getState().setGoldenQuestionAnswer(k as any, String(v));
@@ -81,10 +86,27 @@ export function importAllData(jsonString: string): boolean {
       }
     }
 
-    if (data.audit && Array.isArray(data.audit.trafItems)) {
-      useAuditStore.getState().setTrafItems(data.audit.trafItems);
+    if (data.audit) {
+      if (Array.isArray(data.audit.trafItems)) {
+        useAuditStore.getState().setTrafItems(data.audit.trafItems);
+      }
+      if (Array.isArray(data.audit.timeLogs)) {
+        useAuditStore.getState().setTimeLogs(data.audit.timeLogs);
+      }
       if (data.audit.annualTargetIncome) {
         useAuditStore.getState().setAnnualTargetIncome(data.audit.annualTargetIncome);
+      }
+    }
+
+    if (data.balance) {
+      if (data.balance.wheelScores) {
+        useBalanceStore.getState().setWheelScores(data.balance.wheelScores);
+      }
+      if (typeof data.balance.familyMinutesToday === 'number') {
+        useBalanceStore.getState().setFamilyMinutesToday(data.balance.familyMinutesToday);
+      }
+      if (Array.isArray(data.balance.refusals)) {
+        useBalanceStore.getState().setRefusals(data.balance.refusals);
       }
     }
 

@@ -23,7 +23,7 @@ export const HeroTaskCard: React.FC<HeroTaskCardProps> = ({
         <View style={styles.tagGroup}>
           <VectorIcon name="crosshair" size={13} color={THEME.colors.accent} />
           <Text style={styles.principleTag}>
-            {t('focus.singleHandlingTag', { defaultValue: 'SINGLE HANDLING (#21)' })}
+            {t('focus.singleHandlingTag', { defaultValue: 'SINGLE HANDLING (#5)' })}
           </Text>
         </View>
         <Badge

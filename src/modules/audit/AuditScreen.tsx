@@ -43,7 +43,7 @@ export const AuditScreen: React.FC = () => {
       {/* Top Header */}
       <ExecutiveHeader
         title={t('tabs.audit', { defaultValue: 'TIME AUDIT & TRIAGE' })}
-        subtitle={t('audit.principleNote', { defaultValue: 'Principles #6, #11, #12 & #15' })}
+        subtitle={t('audit.principleNote', { defaultValue: 'Principles #7, #9, #10, #14 & #18' })}
       />
 
       {/* Hourly Rate & Delegation Calculator */}

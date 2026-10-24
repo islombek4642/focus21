@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, Alert, TextInput, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+  ScrollView,
+  Share,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { THEME } from '../constants/theme.ts';
 import { useTranslation, SupportedLanguage } from '../services/i18n.ts';
 import { useSettingsStore } from '../store/settingsStore.ts';
@@ -37,11 +49,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     }
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const json = exportAllData();
     setImportText(json);
     setShowImportBox(true);
     setBackupCopied(true);
+    try {
+      await Share.share({
+        message: json,
+        title: 'Focus 21 Backup',
+      });
+    } catch {
+      // User dismissed share dialog
+    }
   };
 
   const handleImportSubmit = () => {
@@ -65,8 +85,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.backdrop}>
-        <View style={styles.card}>
-          <View style={styles.header}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardAvoid}
+        >
+          <View style={styles.card}>
+            <View style={styles.header}>
             <View style={styles.headerLeft}>
               <VectorIcon name="settings" size={18} color={THEME.colors.accent} />
               <Text style={styles.headerTitle}>
@@ -159,8 +183,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   onPress={() => setShowImportBox(!showImportBox)}
                   activeOpacity={0.7}
                 >
-                  <VectorIcon name="upload" size={14} color="#60A5FA" />
-                  <Text style={[styles.backupBtnText, { color: '#60A5FA' }]}>
+                  <VectorIcon name="upload" size={14} color={THEME.colors.badgeBlue} />
+                  <Text style={[styles.backupBtnText, { color: THEME.colors.badgeBlue }]}>
                     {t('common.import', { defaultValue: 'Import JSON' })}
                   </Text>
                 </TouchableOpacity>
@@ -198,9 +222,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <View style={styles.thesisCard}>
               <VectorIcon name="shield" size={14} color={THEME.colors.accent} />
               <View style={styles.thesisContent}>
-                <Text style={styles.thesisTitle}>Obsidian Executive OS</Text>
+                <Text style={styles.thesisTitle}>
+                  {t('common.thesisTitle', { defaultValue: 'Obsidian Executive OS' })}
+                </Text>
                 <Text style={styles.thesisText}>
-                  Built strictly according to Brian Tracy's 21 Time Management Principles. 100% offline, zero emojis, pure focus.
+                  {t('common.thesisText', {
+                    defaultValue: "Built strictly according to Brian Tracy's 21 Time Management Principles. 100% offline, zero emojis, pure focus.",
+                  })}
                 </Text>
               </View>
             </View>
@@ -215,6 +243,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             />
           </View>
         </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -225,6 +254,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
+  },
+  keyboardAvoid: {
+    width: '100%',
   },
   card: {
     backgroundColor: THEME.colors.card,
@@ -271,7 +303,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -280,7 +312,7 @@ const styles = StyleSheet.create({
   },
   langRowActive: {
     borderColor: THEME.colors.accent,
-    backgroundColor: '#1E190E',
+    backgroundColor: THEME.colors.accentMuted,
   },
   langInfo: {
     flex: 1,
@@ -307,7 +339,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -321,7 +353,7 @@ const styles = StyleSheet.create({
   },
   importBox: {
     marginTop: 10,
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     padding: 10,
     borderWidth: 1,
@@ -333,7 +365,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   textArea: {
-    backgroundColor: '#0D0E11',
+    backgroundColor: THEME.colors.canvas,
     borderRadius: THEME.radii.sm,
     color: THEME.colors.textPrimary,
     fontSize: 11,
@@ -344,7 +376,7 @@ const styles = StyleSheet.create({
   },
   thesisCard: {
     flexDirection: 'row',
-    backgroundColor: '#15171D',
+    backgroundColor: THEME.colors.card,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.05)',
@@ -370,7 +402,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#161922',
+    backgroundColor: THEME.colors.card,
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: THEME.radii.md,

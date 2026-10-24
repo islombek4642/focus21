@@ -31,7 +31,7 @@ export const PlannerScreen: React.FC = () => {
     if (newTaskTitle.trim()) {
       const existingInPriority = plannerState.tasks.filter((t) => t.priority === newPriority);
       usePlannerStore.getState().addTask({
-        id: `task-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+        id: `task-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
         title: newTaskTitle.trim(),
         priority: newPriority,
         priorityRank: existingInPriority.length + 1,
@@ -84,7 +84,7 @@ export const PlannerScreen: React.FC = () => {
       {/* Top Header */}
       <ExecutiveHeader
         title={t('tabs.planner', { defaultValue: 'ABCDE PLANNER' })}
-        subtitle={t('planner.principleNote', { defaultValue: 'Principles #1, #3 & #5' })}
+        subtitle={t('planner.principleNote', { defaultValue: 'Principles #2, #3, #4 & #13' })}
         badge={
           <TouchableOpacity
             style={styles.ritualBtn}
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   ritualBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     paddingHorizontal: 10,
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   prioritySelector: {
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: THEME.radii.sm,
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.md,
   },
   filterPill: {
-    backgroundColor: '#16181D',
+    backgroundColor: THEME.colors.card,
     borderWidth: 1,
     borderColor: THEME.colors.border,
     paddingHorizontal: 10,
@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: THEME.radii.full,
   },
   filterPillActive: {
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderColor: THEME.colors.accent,
   },
   filterPillText: {

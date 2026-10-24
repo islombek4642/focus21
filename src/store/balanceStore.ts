@@ -35,6 +35,9 @@ export interface BalanceState {
   addSayingNoEntry: (request: string, reason?: string) => void;
   addRefusal: (requestTitle: string, reason?: string) => void;
   reset: () => void;
+  setWheelScores: (scores: Record<string, number>) => void;
+  setFamilyMinutesToday: (minutes: number) => void;
+  setRefusals: (refusals: RefusalEntry[]) => void;
 }
 
 type Listener = () => void;
@@ -125,6 +128,25 @@ class BalanceStore {
         this.state.familyMinutesToday = 0;
         this.state.sayingNoEntries = [];
         this.state.refusals = [];
+        this.notify();
+      },
+      setWheelScores: (scores) => {
+        this.state.wheelScores = { ...scores };
+        this.state.scores = { ...this.state.scores, ...scores };
+        this.notify();
+      },
+      setFamilyMinutesToday: (minutes) => {
+        this.state.familyMinutesToday = minutes;
+        this.notify();
+      },
+      setRefusals: (refusals) => {
+        this.state.refusals = [...refusals];
+        this.state.sayingNoEntries = refusals.map((r) => ({
+          id: r.id,
+          request: r.requestTitle || r.request || '',
+          reason: r.reason || '',
+          timestamp: r.declinedAt || r.timestamp || Date.now(),
+        }));
         this.notify();
       },
     };

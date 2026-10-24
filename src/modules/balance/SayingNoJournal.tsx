@@ -38,7 +38,7 @@ export const SayingNoJournal: React.FC<SayingNoJournalProps> = ({ entries, onAdd
           <VectorIcon name="shield" size={16} color={THEME.colors.accent} />
           <View style={styles.titles}>
             <Text style={styles.title}>
-              {t('balance.sayingNoTitle', { defaultValue: 'Learn to Say NO (Principle #10)' })}
+              {t('balance.sayingNoTitle', { defaultValue: 'Learn to Say NO (Principle #20)' })}
             </Text>
             <Text style={styles.subtitle}>
               {t('balance.sayingNoSubtitle', { defaultValue: 'The ultimate executive time management weapon' })}
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   scriptsBlock: {
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1B1E26',
+    backgroundColor: THEME.colors.priorityD,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255, 255, 255, 0.04)',
   },
   noBadge: {
-    backgroundColor: '#301313',
+    backgroundColor: THEME.colors.priorityA,
     borderWidth: 1,
     borderColor: THEME.colors.danger,
     paddingHorizontal: 5,

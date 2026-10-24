@@ -30,7 +30,7 @@ export const HourlyRateCalculator: React.FC = () => {
               {t('audit.hourlyRateTitle', { defaultValue: 'Hourly Value & Delegation' })}
             </Text>
             <Text style={styles.subtitle}>
-              {t('audit.hourlyRatePrinciple', { defaultValue: 'Principle #12: Annual Income ÷ 2,000 Hours' })}
+              {t('audit.hourlyRatePrinciple', { defaultValue: 'Principle #9: Annual Income ÷ 2,000 Hours' })}
             </Text>
           </View>
         </View>
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#111317',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: THEME.colors.border,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   rateDisplayBlock: {
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     borderWidth: 1,
     borderColor: THEME.colors.accent,
     borderRadius: THEME.radii.md,
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   ruleBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#171A21',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.md,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.05)',

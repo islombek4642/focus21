@@ -30,36 +30,36 @@ export const ABCDETaskItem: React.FC<ABCDETaskItemProps> = ({
     switch (priority) {
       case 'A':
         return {
-          bg: '#2B1A0A',
+          bg: THEME.colors.priorityB,
           border: THEME.colors.accent,
           text: THEME.colors.accent,
           label: 'A - MUST',
         };
       case 'B':
         return {
-          bg: '#14223A',
-          border: '#3B82F6',
-          text: '#60A5FA',
+          bg: THEME.colors.priorityC,
+          border: THEME.colors.info,
+          text: THEME.colors.badgeBlue,
           label: 'B - SHOULD',
         };
       case 'C':
         return {
-          bg: '#1A1D24',
+          bg: THEME.colors.priorityD,
           border: THEME.colors.border,
           text: THEME.colors.textSecondary,
           label: 'C - NICE',
         };
       case 'D':
         return {
-          bg: '#2D1B10',
-          border: '#F97316',
-          text: '#FB923C',
+          bg: THEME.colors.priorityB,
+          border: THEME.colors.warning,
+          text: THEME.colors.warningText,
           label: 'D - DELEGATE',
         };
       case 'E':
       default:
         return {
-          bg: '#2A1010',
+          bg: THEME.colors.priorityA,
           border: THEME.colors.danger,
           text: THEME.colors.danger,
           label: 'E - ELIMINATE',
@@ -157,7 +157,7 @@ export const ABCDETaskItem: React.FC<ABCDETaskItemProps> = ({
           <View style={styles.salamiHeader}>
             <VectorIcon name="scissors" size={12} color={THEME.colors.accent} />
             <Text style={styles.salamiHeaderTitle}>
-              {t('planner.salamiTitle', { defaultValue: 'SALAMI SLICING (PRINCIPLE #18)' })}
+              {t('planner.salamiTitle', { defaultValue: 'SALAMI SLICING (PRINCIPLE #8)' })}
             </Text>
           </View>
 
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   paretoHighlight: {
     borderColor: 'rgba(229, 169, 60, 0.4)',
-    backgroundColor: '#191A20',
+    backgroundColor: THEME.colors.cardElevated,
   },
   mainRow: {
     flexDirection: 'row',
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   paretoTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#261F10',
+    backgroundColor: THEME.colors.accentMuted,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: THEME.radii.full,
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   subtaskInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#121418',
+    backgroundColor: THEME.colors.cardDark,
     borderRadius: THEME.radii.sm,
     borderWidth: 1,
     borderColor: THEME.colors.border,

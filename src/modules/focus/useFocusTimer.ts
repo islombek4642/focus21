@@ -30,13 +30,27 @@ export function useFocusTimer() {
 
   // AppState background/foreground compensation
   useEffect(() => {
+    let backgroundTimestamp: number | null = null;
+
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      if (nextAppState === 'active' && storeState.isRunning && storeState.startedAtTimestamp) {
-        const elapsedSec = Math.floor((Date.now() - storeState.startedAtTimestamp) / 1000);
-        if (elapsedSec > 0) {
-          const expectedRemaining = Math.max(0, storeState.totalSeconds - elapsedSec);
-          useFocusStore.setState({ remainingSeconds: expectedRemaining });
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        backgroundTimestamp = Date.now();
+      } else if (nextAppState === 'active') {
+        const state = useFocusStore.getState();
+        if (state.isRunning && backgroundTimestamp) {
+          const elapsedSec = Math.floor((Date.now() - backgroundTimestamp) / 1000);
+          if (elapsedSec > 0) {
+            const expectedRemaining = Math.max(0, state.remainingSeconds - elapsedSec);
+            useFocusStore.setState({
+              remainingSeconds: expectedRemaining,
+              secondsRemaining: expectedRemaining,
+            });
+            if (expectedRemaining === 0) {
+              useFocusStore.getState().tick(0);
+            }
+          }
         }
+        backgroundTimestamp = null;
       }
     };
 
@@ -44,7 +58,7 @@ export function useFocusTimer() {
     return () => {
       subscription.remove();
     };
-  }, [storeState.isRunning, storeState.startedAtTimestamp, storeState.totalSeconds]);
+  }, []);
 
   const handleStart = async () => {
     try {

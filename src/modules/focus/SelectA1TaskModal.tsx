@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { THEME } from '../../constants/theme.ts';
 import { useTranslation } from '../../services/i18n.ts';
@@ -64,7 +66,7 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
     const trimmed = newTitle.trim();
     if (!trimmed) return;
 
-    const newTaskId = `task-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
+    const newTaskId = `task-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const newTask: Task = {
       id: newTaskId,
       title: trimmed,
@@ -102,7 +104,11 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.backdrop}>
-        <View style={styles.card}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.keyboardAvoid}
+        >
+          <View style={styles.card}>
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerLeft}>
@@ -144,7 +150,7 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
                   disabled={!newTitle.trim()}
                   activeOpacity={0.8}
                 >
-                  <VectorIcon name="check" size={16} color="#000000" />
+                  <VectorIcon name="check" size={16} color={THEME.colors.canvas} />
                   <Text style={styles.addBtnText}>
                     {t('focus.addAndSelect', { defaultValue: 'Set as A-1' })}
                   </Text>
@@ -208,6 +214,7 @@ export const SelectA1TaskModal: React.FC<SelectA1TaskModalProps> = ({
             </View>
           </ScrollView>
         </View>
+        </KeyboardAvoidingView>
       </View>
     </Modal>
   );
@@ -218,6 +225,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     justifyContent: 'flex-end',
+  },
+  keyboardAvoid: {
+    width: '100%',
   },
   card: {
     backgroundColor: THEME.colors.card,
@@ -295,7 +305,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   addBtnText: {
-    color: '#000000',
+    color: THEME.colors.canvas,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -354,7 +364,7 @@ const styles = StyleSheet.create({
   badgeB: {
     backgroundColor: 'rgba(59, 130, 246, 0.2)',
     borderWidth: 1,
-    borderColor: '#3B82F6',
+    borderColor: THEME.colors.info,
   },
   badgeOther: {
     backgroundColor: 'rgba(156, 163, 175, 0.15)',
