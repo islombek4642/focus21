@@ -106,18 +106,6 @@ export const HeroTaskCard: React.FC<HeroTaskCardProps> = ({
                 </Text>
               </TouchableOpacity>
             )}
-            {onSelectTask && (
-              <TouchableOpacity
-                style={styles.switchBtn}
-                onPress={onSelectTask}
-                activeOpacity={0.8}
-              >
-                <VectorIcon name="refresh-cw" size={13} color={THEME.colors.textSecondary} />
-                <Text style={styles.switchBtnText}>
-                  {t('focus.switchTask', { defaultValue: 'Change A-1' })}
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
         </View>
       ) : (

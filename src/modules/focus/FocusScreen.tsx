@@ -43,30 +43,21 @@ export const FocusScreen: React.FC = () => {
     };
   }, []);
 
-  // Sync initial candidate if focusStore.a1Task is empty on launch
-  useEffect(() => {
-    if (!useFocusStore.getState().a1Task) {
-      const tasks = usePlannerStore.getState().tasks;
-      const candidate =
-        tasks.find((task) => !task.completed && task.priority === 'A' && task.priorityRank === 1) ||
-        tasks.find((task) => !task.completed && task.priority === 'A') ||
-        tasks.find((task) => !task.completed) ||
-        null;
-      if (candidate) {
-        useFocusStore.getState().setA1Task({ id: candidate.id, title: candidate.title });
-      }
-    }
-  }, []);
-
-  // Live active task matching focusStore.a1Task with plannerTasks (including subtasks)
+  // Pure automatic priority focus:
+  // Active task is ALWAYS the highest-priority incomplete task (A-1 -> A-2 -> B-1 ...)
   const activeTask = React.useMemo(() => {
-    const a1 = focusState.a1Task;
-    if (a1) {
-      const match = plannerTasks.find((t) => t.id === a1.id && !t.completed);
-      if (match) return match;
+    const incomplete = plannerTasks.filter((t) => !t.completed);
+    return incomplete[0] || null;
+  }, [plannerTasks]);
+
+  // Keep focusStore in sync for offline persistence
+  useEffect(() => {
+    const currentA1 = useFocusStore.getState().a1Task;
+    const nextVal = activeTask ? { id: activeTask.id, title: activeTask.title } : null;
+    if (currentA1?.id !== nextVal?.id || currentA1?.title !== nextVal?.title) {
+      useFocusStore.getState().setA1Task(nextVal);
     }
-    return null;
-  }, [focusState.a1Task, plannerTasks]);
+  }, [activeTask]);
 
   const handleToggleTimer = () => {
     if (isRunning) {
